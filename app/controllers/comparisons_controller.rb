@@ -30,10 +30,12 @@ class ComparisonsController < ApplicationController
 					if b.is_a? Hash
 						# so b here is {:url => "google.com"} for instance.
 						# we push because @comparison.products is an array
-						@comparison.products.push(Product.create(url: b[:url]))
+						@product = Product.create(url: b[:url])
 						
 						# In the future version:
-						crunchm(b[:url])
+						crunchm(@comparison, @product, b[:url])
+						@comparison.products.push(@product)
+						@comparison.tributes.push()
 						# parseAmazon (b[:url])
 						# p = Product.create (url: b[:url], name: name_from_nokogiri)
 						# tributes_from_nokogiri.each do |tribute|

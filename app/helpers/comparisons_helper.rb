@@ -6,9 +6,9 @@ module ComparisonsHelper
 	WEIGHT_DEFAULT = 1
 	SCORE_DEFAULT = 0.5
 	# NOKOGIRI STUFF GOES HERE
-	def crunchm(raw_link)
+	def crunchm(comp, product, raw_link)
 		parsed = parseAmazon(raw_link)
-		nokogiriAmazon(@tech_detail_link)
+		nokogiriAmazon(comp, product, @tech_detail_link)
 		
 	end	
 
@@ -23,7 +23,7 @@ module ComparisonsHelper
 
 	end
 
-	def nokogiriAmazon(parsed_url)
+	def nokogiriAmazon(comp, product, parsed_url)
 		# uses 'nokogiri' gem and 'open-uri'
 
 		#CSS-ARRAY=['#productDetails', '#priceblock_ourprice', '#technical-data' ]
@@ -33,12 +33,14 @@ module ComparisonsHelper
 		#  technical_detail.class  # is a Nokogiri::HTML::Document
 		technical_html = r.to_s
 		if technical_html.include?(':</b>')
-			@comparison.products.tributes.push(Tribute.create(name: technical_html.split("<b>").last.split(":</b>").first,
+			tribute = Tribute.create(name: technical_html.split("<b>").last.split(":</b>").first,
 															value: technical_html.split('</b> ').last.split('</li>').first,
 															weight: WEIGHT_DEFAULT,
-															score: SCORE_DEFAULT))
+															score: SCORE_DEFAULT)
+			product.tributes.push(tribute)
+			comp.tributes.push(tribute)
 		else
-			@tribute = 'Feauture'
+			@tribute = 'Feature'
 			@value = technical_html.split('<li>').last.split('</li>').first
 			"NO TRIBUTE!!!!!!!!!!!!!!!!!!!!!!!!" + technical_html
 		end

@@ -4,4 +4,6 @@ class Comparison < ActiveRecord::Base
   has_many :tributes
 
   accepts_nested_attributes_for :products
+  accepts_nested_attributes_for :tributes
+
 end
