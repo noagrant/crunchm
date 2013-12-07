@@ -1,0 +1,2 @@
+module TributesHelper
+end
