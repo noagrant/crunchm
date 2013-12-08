@@ -1,10 +1,17 @@
 class ComparisonsController < ApplicationController
 	#If logged in -> show previous crunches
 	def index
-		if @comparisons = @user.comparisons	#if user has comparisons load them to @comparisons
-			redirect_to user_comparisons_path(@comparisons)
+		if signed_in?
+			@user = current_user 
+			if @user.comparisons.any?
+				@comparisons = @user.comparisons		
+				redirect_to user_comparisons_path(@comparisons)
+			else
+				redirect_to new_user_comparison_path, notice: 'There were no saved comparisons for #{@user.full_name}'
+			end
+		else #not logged in
+			redirect_to new_comparison_path, notice: 'Login or register to save your crunchm'
 		end
-			redirect_to root_path
 	end
 
 	#form for new comparison (two inputs for urls and a submit button)

@@ -7,7 +7,7 @@
         <h4 class="modal-title" id="loginModalLabel">Login</h4>
       </div>
       <div class="modal-body">
-       <%= simple_form_for @user, url: sessions_path, method: :post, html: {class: 'pull-left margin-left', id: 'login_user'} do |f| %>
+       <%= simple_form_for @user, url: sessions_path, method: :post, html: {class: 'pull-left', id: 'login_user'} do |f| %>
        <% if flash[:error] %>
         <p><%= flash[:error] %></p>
        <% end %>
