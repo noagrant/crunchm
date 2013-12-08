@@ -27,7 +27,7 @@ GEM
       tzinfo (~> 0.3.37)
     arel (4.0.1)
     atomic (1.1.14)
-    bcrypt-ruby (3.0.1)
+    bcrypt-ruby (3.1.2)
     bootstrap-navbar (1.0.1)
       gem_config (~> 0.2.4)
     bootstrap-sass (3.0.2.1)
@@ -118,7 +118,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bcrypt-ruby (~> 3.0.0)
+  bcrypt-ruby (~> 3.1.2)
   bootstrap-sass (~> 3.0.2.1)
   coffee-rails (~> 4.0.0)
   hirb

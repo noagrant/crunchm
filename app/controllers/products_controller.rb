@@ -1,16 +1,16 @@
 class ProductsController < ApplicationController
 
-	# ????delete index?????
-	def index
-		@comparison = Comparison.find(params[:id])
-		@products = Product.where(comparison_id: params[:id])
-	end
+	# # ????delete index?????
+	# def index
+	# 	@comparison = Comparison.find(params[:id])
+	# 	@products = Product.where(comparison_id: params[:id])
+	# end
 
-	# ????delete new?????
-	def new
-		@comparison = Comparison.new
-		@product = Product.new
-	end
+	# # ????delete new?????
+	# def new
+	# 	@comparison = Comparison.new
+	# 	@product = Product.new
+	# end
 
 	# add 3+ products
 	def create
@@ -21,7 +21,7 @@ class ProductsController < ApplicationController
 		# end
 	end
 
-	# price change, 
+	# ranking updated, price change 
 	def update
 	end	
 
@@ -29,23 +29,8 @@ class ProductsController < ApplicationController
 	def destroy
 	end	
 
-	private
-	def parse_url
 
-	end
-
-	public
-	def show
-	end
-
-	def edit
-	end
-
-	def update
-	end
-
-	def destroy
-	end
+	
 
 
 end

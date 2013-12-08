@@ -6,26 +6,19 @@ class ComparisonsController < ApplicationController
 	#Show form for new comparison (two inputs for urls and submit button)
 	def new
 		@comparison = Comparison.new
-
 		2.times do 
 			@comparison.products.build
 		end
-
-		# @product1 = Product.new
-		# @product2 = Product.new
 	end
 
 	#Submit form and process, figure out the winning product
 	def create
-		puts "CREATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
-		puts params
-		puts "CREATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
 		@comparison = Comparison.new(comparison_params)
-		#we need to change this to if parsed, not if saved
+		#!!!!!!!!!!!!!!! note: we need to change this to if parsed, not if saved
 		if @comparison.save
 			params[:comparison][:products_attributes].each do |a|
-				# this does something weird and gives the numerical key as a string instead of a key and "flattens" the hash.
-				# this is why we have to do another loop to access the actual hash in there that has the url value.
+				# because this returns the numerical key as a string instead of a key and "flattens" the hash
+				# we loop to access the actual hash that has the url value.
 				a.each do |b|
 					if b.is_a? Hash
 						# so b here is {:url => "google.com"} for instance.
@@ -36,19 +29,17 @@ class ComparisonsController < ApplicationController
 						crunchm(@comparison, @product, b[:url])
 						@comparison.products.push(@product)
 						@comparison.tributes.push()
+						
 						# parseAmazon (b[:url])
 						# p = Product.create (url: b[:url], name: name_from_nokogiri)
 						# tributes_from_nokogiri.each do |tribute|
 						#  t = Tribute.create ( tribute attributes )
 						#  p.tributes.push(t)
 						# end
-
-
 					end	
 				end
 			end
 			puts "SUCCESS"
-
 		else
 			puts @comparison.errors.full_messages
 		end

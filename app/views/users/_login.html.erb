@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-md-6 offset2">
+    <div id='form-wrap'>
+    <%= simple_form_for @user, url: sessions_path, method: :post, html: {class: 'pull-left margin-left', id: 'login_user'} do |f| %>
+    	<h1>Login</h1>
+      <% if flash[:error] %>
+    		<p><%= flash[:error] %></p>
+    	<% end %>
+      <%= f.input :email, label: 'Email' %>
+      <%= f.input :password, label: 'Password' %>
+      <%= f.submit 'Login', class: 'btn pull-right'%>
+    <% end %>
+    </div>
+  </div>
+</div>

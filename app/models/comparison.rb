@@ -6,4 +6,5 @@ class Comparison < ActiveRecord::Base
   accepts_nested_attributes_for :products
   accepts_nested_attributes_for :tributes
 
+  validates :user_id, presence: true
 end

@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-md-6 offset2">
+    <div id='form-wrap'>
+    <% if flash[:errors] %>
+    	<% flash[:errors].each do |error| %>
+    		<p class='text-error'><%= error %></p>
+    	<% end %>
+    <% end %>
+    <%= simple_form_for @user do |f| %>
+      <%= f.input :first_name, label: 'First Name' %>
+      <%= f.input :last_name, label: 'Last Name' %>
+      <%= f.input :email, label: 'Email' %>
+      <%= f.input :password, label: 'Password' %>
+      <%= f.input :password_confirmation, label: 'Confirm Password' %>
+      <%= f.submit 'submit', class: 'btn pull-right'%>
+    <% end %>
+    </div>
+  </div>
+</div>
