@@ -1,13 +1,12 @@
 <div class="row">
 	<div class="col-md-6 offset3">
 		<%= simple_form_for @comparison do |f| %>
+		<%#= simple_form_for(@comparison, url: user_comparisons_path(@user)) do |f| %>
 		<div class="form-group">
 			<%= f.simple_fields_for :products do |ff| %>
 				<%= ff.input :url %>
 			<% end %>
 			<%= f.button :submit, value: 'Crunchm' %>
-		<%#= f.input :url, label: 'Enter a link to a product to compare', input_html: { class: 'input-xlarge' }  %>
-		<%#= f.button :submit, value: 'Crunchm' %>
 		</div>
 		<% end %>
 	</div>
