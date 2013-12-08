@@ -1,9 +1,13 @@
 class ComparisonsController < ApplicationController
 	#If logged in -> show previous crunches
 	def index
+		if @comparisons = @user.comparisons	#if user has comparisons load them to @comparisons
+			redirect_to user_comparisons_path(@comparisons)
+		end
+			redirect_to root_path
 	end
 
-	#Show form for new comparison (two inputs for urls and submit button)
+	#form for new comparison (two inputs for urls and a submit button)
 	def new
 		@comparison = Comparison.new
 		2.times do 

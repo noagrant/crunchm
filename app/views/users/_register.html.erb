@@ -1,0 +1,29 @@
+<!-- Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="registerModalLabel">Register</h4>
+      </div><!-- modal header -->
+      <div class="modal-body">
+       <%= simple_form_for @user do |f| %>
+         <% if flash[:error] %>
+          <<% flash[:errors].each do |error| %>
+            <p class='text-error'><%= error %></p>
+          <% end %>
+         <% end %> 
+         <%= f.input :first_name, label: 'First Name' %>
+         <%= f.input :last_name, label: 'Last Name' %>
+         <%= f.input :email, label: 'Email' %>
+         <%= f.input :password, label: 'Password' %>
+         <%= f.input :password_confirmation, label: 'Confirm Password' %>
+         <%= f.submit 'Register', class: 'btn pull-right'%>
+      <% end %>
+      <div class="modal-footer">
+        <h5>Welcome to crunchm!</h5>
+      </div> <!-- modal-footer -->
+      </div><!-- modal-body -->
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal fade-->

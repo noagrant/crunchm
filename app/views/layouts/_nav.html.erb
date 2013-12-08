@@ -53,12 +53,16 @@
       <% if !session[:user_id].nil? %>
         <li><a><%= User.find_by(id: session[:user_id]).full_name %></a></li>
         <li><%= link_to 'Logout', session_path(current_user), method: 'delete', class: 'btn btn-mini' %></li>
+      <!-- login and register -->
       <% else %>
         <p class="navbar-text">To SAVE your crunchm:
-        <li><%= link_to 'Login', new_session_path %></li><span class="navbar-text">or</span>
-        <li><%= link_to 'Register', new_user_path %></li></p>  
+        <li data-toggle="modal" data-target="#loginModal"><%= link_to 'Login', new_session_path %></li>
+        <span class="navbar-text">or</span>
+        <li data-toggle="modal" data-target="#registerModal"><%= link_to 'Register', new_user_path %></li></p> 
       <% end %>
-      <!-- user's name and logout - ends here -->
+      <%= render 'users/login' %>
+      <%= render 'users/register' %>
+      <!-- END login & logout  -->
     </ul>
   </div><!-- /.navbar-collapse -->
 </nav>
