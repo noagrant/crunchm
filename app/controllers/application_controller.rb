@@ -4,4 +4,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include ComparisonsHelper
   include SessionsHelper
+  before_filter :initialize_user
+
+  def initialize_user
+    @user = User.new
+  end
 end
