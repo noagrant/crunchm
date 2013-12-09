@@ -11,4 +11,7 @@
  *= require_self
  *= require_tree .
  */
+$navbar-default-bg: #A1C5C9;
+$light-orange: #ff8c00;
+$navbar-default-color: $light-orange;
 @import 'bootstrap';

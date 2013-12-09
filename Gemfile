@@ -32,8 +32,13 @@ gem 'jbuilder', '~> 1.2'
 # Use ActiveModel has_secure_password
 gem 'bcrypt-ruby', '~> 3.1.2'
 
-gem "bootstrap-sass", "~> 3.0.2.1"
 gem 'hirb'
-gem 'simple_form'
+
+# for simple form to work with botstrap 2.3 enter in console:
+# rails g simple_form:install --bootstrap
+# see https://github.com/plataformatec/simple_form for documentation
+gem "bootstrap-sass", "~> 2.3.2"
+# gem "bootstrap-sass", "~> 3.0.2.1"
+gem 'simple_form', '~> 3.0.0'
 gem 'rails_bootstrap_navbar'
 gem 'nokogiri', '~> 1.6.0', :require => "nokogiri"

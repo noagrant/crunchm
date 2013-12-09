@@ -1,5 +1,13 @@
 # Use this setup block to configure all options available in SimpleForm.
 SimpleForm.setup do |config|
+
+# the following settings are from http://stabco.tumblr.com/post/59760641051/simple-form-bootstrap3-integration
+  #config.input_class = "form-control"
+  #config.label_class = 'control-label' 
+  #config.wrappers :default, :class => "input form-group"
+
+
+
   # Components used by the form builder to generate a complete input. You can remove
   # any of them, change the order, or even add your own components to the stack.
   # config.components = [ :placeholder, :label_input, :hint, :error ]
@@ -86,7 +94,7 @@ SimpleForm.setup do |config|
   # config.country_priority = nil
 
   # Default size for text inputs.
-  #config.default_input_size = 200
+  #config.default_input_size = 70
 
   # When false, do not use translations for labels, hints or placeholders.
   # config.translate = true
