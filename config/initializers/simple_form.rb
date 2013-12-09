@@ -53,10 +53,10 @@ SimpleForm.setup do |config|
   # config.label_text = lambda { |label, required| "#{required} #{label}" }
 
   # You can define the class to use on all labels. Default is nil.
-  # config.label_class = nil
+  #config.label_class = 'form-group'
 
   # You can define the class to use on all forms. Default is simple_form.
-  # config.form_class = :simple_form
+  #config.form_class = 'form-control'
 
   # Whether attributes are required by default (or not). Default is true.
   # config.required_by_default = true
@@ -86,7 +86,7 @@ SimpleForm.setup do |config|
   # config.country_priority = nil
 
   # Default size for text inputs.
-  # config.default_input_size = 50
+  #config.default_input_size = 200
 
   # When false, do not use translations for labels, hints or placeholders.
   # config.translate = true

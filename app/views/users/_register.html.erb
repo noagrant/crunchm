@@ -9,7 +9,7 @@
       <div class="modal-body">
        <%= simple_form_for @user do |f| %>
          <% if flash[:error] %>
-          <<% flash[:errors].each do |error| %>
+          <% flash[:errors].each do |error| %>
             <p class='text-error'><%= error %></p>
           <% end %>
          <% end %> 

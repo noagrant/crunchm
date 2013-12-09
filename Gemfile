@@ -6,20 +6,10 @@ gem 'rails', '4.0.1'
 group :development do
 	gem 'sqlite3'
 	gem 'rails-footnotes'
-	gem 'hirb'
-	gem 'nokogiri', '~> 1.6.0', :require => "nokogiri"
-
-	# Use ActiveModel has_secure_password
-	gem 'bcrypt-ruby', '~> 3.1.2'
 end
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
-gem 'rails_bootstrap_navbar'
-
-#gem "bootstrap-sass", "~> 2.3.2.1"
-#gem "bootstrap-sass", "~> 3.0.2.1"
-gem 'bootstrap-sass'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
@@ -39,7 +29,11 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
-# need to run: rails generate simple_form:install --bootstrap
+# Use ActiveModel has_secure_password
+gem 'bcrypt-ruby', '~> 3.1.2'
+
+gem "bootstrap-sass", "~> 3.0.2.1"
+gem 'hirb'
 gem 'simple_form'
-
-
+gem 'rails_bootstrap_navbar'
+gem 'nokogiri', '~> 1.6.0', :require => "nokogiri"

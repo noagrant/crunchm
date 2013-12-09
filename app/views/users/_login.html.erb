@@ -7,13 +7,17 @@
         <h4 class="modal-title" id="loginModalLabel">Login</h4>
       </div>
       <div class="modal-body">
-       <%= simple_form_for(@user, url: sessions_path, method: :post, html: {class: 'form-vertical', id: 'login_user'}) do |f| %>
-       <% if flash[:error] %>
-        <p><%= flash[:error] %></p>
+       <%= simple_form_for @user, url: sessions_path, method: :post, html: {class: 'pull-left', id: 'login_user'} do |f| %>
+         <div class="form-group">
+         <% if flash[:error] %>
+           <% flash[:errors].each do |error| %>
+            <p class='text-error'><%= error %></p>
+         <% end %> 
        <% end %>
-       <%= f.input :email, label: 'Email', placeholder: 'user@domain.com', input_html: {class: 'span3'} %>
+       <%= f.input :email, label: 'Email', placeholder: 'user@domain.com' %>
        <%= f.input :password, label: 'Password', placeholder: 'at least 6 characters' %>
-       <%= f.submit 'Login', class: 'btn pull-right' %>
+       <%= f.submit 'Login', class: 'btn pull-right'%>
+      </div>
       <% end %>
       </div><!-- modal-body -->
       <div class="modal-footer">
