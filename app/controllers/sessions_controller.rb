@@ -9,7 +9,7 @@ def create
 	else
 		user = user.try(:authenticate, params[:user][:password])
     if user == false || user.nil?
-      redirect_to new_user_path, notice: 'Yikes... wrong combination of user email and password. Please retry.'
+      redirect_to :back, notice: 'Yikes... wrong combination of user email and password. Please retry.'
     else
     sign_in user
 	  redirect_to user_comparisons_path(user)
