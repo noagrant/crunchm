@@ -27,6 +27,7 @@ class ComparisonsController < ApplicationController
 		@comparison = Comparison.new(comparison_params)
 		#!!!!!!!!!!!!!!! note: we need to change this to if parsed, not if saved
 		if @comparison.save
+			User.find(session[:user_id]).comparisons += [@comparison]
 			params[:comparison][:products_attributes].each do |a|
 				# because this returns the numerical key as a string instead of a key and "flattens" the hash
 				# we loop to access the actual hash that has the url value.
@@ -82,7 +83,7 @@ class ComparisonsController < ApplicationController
 	end
 
 	def comparison_params
-		params.require(:comparison).permit(:name, :note, :products_attributes)
+		params.require(:comparison).permit(:name, :note, :products_attributes, :user_id)
 	end
 
 end
