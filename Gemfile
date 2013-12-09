@@ -42,3 +42,4 @@ gem "bootstrap-sass", "~> 2.3.2"
 gem 'simple_form', '~> 3.0.0'
 gem 'rails_bootstrap_navbar'
 gem 'nokogiri', '~> 1.6.0', :require => "nokogiri"
+gem "vacuum", "~> 1.0.0"
