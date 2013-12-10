@@ -25,7 +25,9 @@ class ComparisonsController < ApplicationController
 
 	#Submit form and process, figure out the winning product
 	def create
+        @tributes_names_hash = Hash.new
 		@comparison = Comparison.new(comparison_params)
+		@user = current_user
 		#!!!!!!!!!!!!!!! note: we need to change this to if parsed, not if saved
 		if @comparison.save
 			User.find(session[:user_id]).comparisons += [@comparison]
@@ -39,7 +41,7 @@ class ComparisonsController < ApplicationController
 						@product = Product.create(url: b[:url])
 						
 						# In the future version:
-						crunchm(@comparison, @product, b[:url])
+						@crunchm = crunchm(@comparison, @product, b[:url], @tributes_names_hash)
 						@comparison.products.push(@product)
 						@comparison.tributes.push()
 						
@@ -61,6 +63,8 @@ class ComparisonsController < ApplicationController
 		# 	redirect_to comparisons_path
 		# else redirect_to :back, :flash=> { errors: @comparison.errors.full_messages}
 		# end
+        
+		render action: "edit"
 
 	end
 
@@ -68,6 +72,8 @@ class ComparisonsController < ApplicationController
 	#this is the page to add/delete tributes/products (add product calls ProductsController create action)
 	#change weight and scores. re-sort
 	def edit
+        @comparison = Comparison.find(params[:id])
+		@array = make_first_column(@comparison) #make_first_column is a method inside comparison helper
 	end
 
 	#process edits, recalculates winner

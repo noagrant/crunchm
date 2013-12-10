@@ -9,9 +9,9 @@ module ComparisonsHelper
 	URL2 = 'http://www.amazon.com/Google-Nexus-Tablet-7-Inch-Black/dp/B00DVFLJKQ/ref=sr_1_2?ie=UTF8&qid=1386612400&sr=8-2&keywords=7%22+tablet'
 
 	# NOKOGIRI STUFF GOES HERE
-	def crunchm(comp, product, raw_link)
+	def crunchm(comp, product, raw_link, tributes_names_hash)
 		parsed = parseAmazon(raw_link)
-		nokogiriAmazon(comp, product, @tech_detail_link)
+		return nokogiriAmazon(comp, product, @tech_detail_link, tributes_names_hash)
 		vacuumAmazon(@asin)
 	end	
 
@@ -25,7 +25,7 @@ module ComparisonsHelper
 		puts "ASIN is ==============================" + @asin
 	end
 
-	def nokogiriAmazon(comp, product, parsed_url)
+	def nokogiriAmazon(comp, product, parsed_url, tributes_names_hash)
 		# uses 'nokogiri' gem and 'open-uri'
 
 		#CSS-ARRAY=['#productDetails', '#priceblock_ourprice', '#technical-data' ]
@@ -35,6 +35,10 @@ module ComparisonsHelper
 		#  technical_detail.class  # is a Nokogiri::HTML::Document
 			technical_html = r.to_s
 			if technical_html.include?(':</b>')
+                name = technical_html.split("<b>").last.split(":</b>").first
+				value = technical_html.split('</b> ').last.split('</li>').first
+				tributes_names_hash[name] = SCORE_DEFAULT
+
 				tribute = Tribute.create(name: technical_html.split("<b>").last.split(":</b>").first,
 																value: technical_html.split('</b> ').last.split('</li>').first,
 																weight: WEIGHT_DEFAULT,
@@ -49,8 +53,17 @@ module ComparisonsHelper
 			# puts "TRIBUTE IS: "+@tribute
 			# puts "VALUE IS: " +@value				
 		end	
+        return tributes_names_hash
 	end
 
+    def make_first_column(comparison)
+		@tributes_names_hash = Hash.new
+		@comparison.tributes.each do |x| 
+			@tributes_names_hash[x.name] = SCORE_DEFAULT
+		end
+		return @tributes_names_hash
+	end
+	
 	def vacuumAmazon(asin)
 		request = Vacuum.new
 		request.configure(
@@ -71,62 +84,55 @@ module ComparisonsHelper
 		puts item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]
 		# puts 'the brand is ' + item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]["Brand"]
 		tributes_hash = item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]
+		
+		
+		#Allow these:
+		@tributes_allowed = {
+			Actor: [100,2,1],
+			Artist: [10,2,26],
+			AspectRatio: [1,2,27],
+			AudienceRating: [1,3,41], 
+			AudioFormat: [1,3,42],
+			Author: [10,2,5],
+			Brand: [10, 2,7],
+			Color: [1,1,22],
+			Creator:[1,3,43],
+			Director: [10,1,6],
+			Feature: [1,1,10],
+			Format: [1,3,44],
+			HardwarePlatform: [1,1,11],
+			Genre: [1,2,28],
+			IsAutographed: [10,1,23],
+			ItemDimensions: [1,1,12],
+			Languages: [1,2,29],
+			ListPrice: [100,1,2],
+			Manufacturer: [1,3,45],
+			Model: [1,1,8],
+			NumberOfItems: [1,1,17],
+			NumberOfPages: [1,1,18],
+			OperatingSystem: [1,1,9],
+			PackageQuantity: [1,1,19],
+			Platform: [1,2,34],
+			PublicationDate: [1,2,35],
+			ReleaseDate: [1,1,20],
+			RunningTime: [1,1,21],
+			Size: [1,2,36],
+			SubscriptionLength: [1,2,37],
+			Title: [1,1,1],
+			Studio: [1,2,38],
+			Warranty: [1,2,39]
+	}
+
 		tributes_hash.each do |key, value| 
-			
-			if tributes_allowed.include?(key)
+			if @tributes_allowed.has_key?(key.to_sym)
 				puts "the key is // " + key.to_s + 'and the value is ' + value.to_s
-
-
+			end
 		end	
 	end	
-end
-Array_of_non_tributes.exclude?()
 
 
-#Allow these:
-tributes_allowed = {
-	Actor: [100,2,1],
-	Artist: [10,2,26],
-	AspectRatio: [1,2,27],
-	AudienceRating: [1,3,41], 
-	AudioFormat: [1,3,42],
-	Author: [10,2,5],
-	Brand: [10, 2,7],
-	Color: [1,1,22],
-	Creator:[1,3,43],
-	Director: [10,1,6],
-	Feature: [1,1,10],
-	Format: [1,3,44],
-	HardwarePlatform: [1,1,11],
-	Genre[1,2,28],
-	IsAutographed: [10,1,23],
-	ItemDimensions: [1,1,12],
-		#Height 
-		#Length
-		#Width
-		#Weight
-	Languages: [1,2,29],
-		#Language
-			#Name
-			#Type
-			#AudioFormat
-	ListPrice: [100,1,2],
-	Manufacturer: [1,3,45],
-	Model: [1,1,8],
-	NumberOfItems: [1,1,17],
-	NumberOfPages: [1,1,18],
-	OperatingSystem: [1,1,9],
-	PackageQuantity: [1,1,19],
-	Platform: [1,2,34],
-	PublicationDate: [1,2,35],
-	ReleaseDate: [1,1,20],
-	RunningTime: [1,1,21],
-	Size: [1,2,36],
-	SubscriptionLength: [1,2,37],
-	Title: [1,1,1],
-	Studio: [1,2,38],
-	Warranty: [1,2,39]
-}
+
+
 
 #Do NOT allow:
 tributes_disallowed = %w(
@@ -172,3 +178,4 @@ tributes_disallowed = %w(
 	UPCList
 	UPCListElement
 	WEEETaxValue)
+end
