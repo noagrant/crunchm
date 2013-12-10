@@ -8,7 +8,7 @@ module ComparisonsHelper
 	URL1 = 'http://www.amazon.com/Samsung-Galaxy-Tab-7-Inch-White/dp/B00D02AGU4/ref=sr_1_2?s=electronics&ie=UTF8&qid=1386353560&sr=1-2&keywords=tablet'
 	URL2 = 'http://www.amazon.com/Google-Nexus-Tablet-7-Inch-Black/dp/B00DVFLJKQ/ref=sr_1_2?ie=UTF8&qid=1386612400&sr=8-2&keywords=7%22+tablet'
 	#Allow these:
-	#[weight, group, placement within group]
+	#name: [weight, group, placement within group]
 	TRIBUTES_ALLOWED = {
 		Actor: [100,2,1],
 		Artist: [10,2,26],
@@ -45,12 +45,12 @@ module ComparisonsHelper
 		Warranty: [1,2,39]
 	}
 
-	# NOKOGIRI STUFF GOES HERE
+	# main function to handle the entire back end => will move to controller
 	def crunchm(comp, product, raw_link, tributes_names_hash)
 		parsed = parseAmazon(raw_link)
-		# @tributes = Tribute.new
-		return nokogiriAmazon(comp, product, @tech_detail_link, tributes_names_hash)
-		vacuumAmazon(@asin)
+		@tributes_hash = Hash.new
+		nokogiri_amazon = nokogiriAmazon(@asin, comp, product, @tech_detail_link, tributes_names_hash, @tributes_hash)
+		vacuumAmazon(@asin, nokogiri_amazon)
 	end	
 
 	def parseAmazon(raw_link)
@@ -62,38 +62,64 @@ module ComparisonsHelper
 		puts "Tech detailed AMAZON" + @tech_detail_link
 		puts "ASIN is ==============================" + @asin
 	end
-
-	def nokogiriAmazon(comp, product, parsed_url, tributes_names_hash)
+	
+	# NOKOGIRI STUFF GOES HERE
+	def nokogiriAmazon(asin, comp, product, parsed_url, tributes_names_hash, tributes_hash)
 		# uses 'nokogiri' gem and 'open-uri'
-
+		counter = 0
 		technical_detail = Nokogiri::HTML(open(parsed_url))
+		# Amazon rating is not included in the item attributes, so we extract it separately
+		customer_rating = retrieveRating(technical_detail)
+		tributes_hash[:amazon_rating]= { value: customer_rating,
+								weight: 100,
+								score: SCORE_DEFAULT,
+								group: 1,
+								placement: 0,
+								asin: asin
+								}
+	puts '++++====================================++++'
+	puts customer_rating
+	puts '++++====================================++++'
 		technical_detail.css("#technical-data .bucket .content li").each do |r| 
 		#  r.class # is a Nokogiri::XML::Element
 		#  technical_detail.class  # is a Nokogiri::HTML::Document
 			technical_html = r.to_s
 			
+
 			# if Amazon included a title for the attribute in a <b> tag
 			if technical_html.include?(':</b>')
-                name = technical_html.split("<b>").last.split(":</b>").first
+                key = technical_html.split("<b>").last.split(":</b>").first
 				value = technical_html.split('</b> ').last.split('</li>').first
-				tributes_names_hash[name] = WEIGHT_DEFAULT
-
-				tribute = {name: name,
-						value: value,
-						weight: WEIGHT_DEFAULT,
-						score: SCORE_DEFAULT}
-				
-			else # 'there is no title for the attribute on Amazon's site
-				tribute = {name: 'Feature',
-						value: technical_html.split('<li>').last.split('</li>').first,
-						weight: WEIGHT_DEFAULT,
-						score: SCORE_DEFAULT}
+				# tributes_names_hash[name] = WEIGHT_DEFAULT
+				puts "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+				tributes_hash[key.to_sym]= { value: value,
+								weight: WEIGHT_DEFAULT,
+								score: SCORE_DEFAULT,
+								group: 2,
+								placement: counter,
+								asin: asin
+								}
+			
+					
+			# else # 'there is no title for the attribute on Amazon's site
+			#will not display these features as vacuumAmazon will produce same features
+				# tribute = { 'Feature':
+				# 		value: technical_html.split('<li>').last.split('</li>').first,
+				# 		weight: WEIGHT_DEFAULT,
+				# 		score: SCORE_DEFAULT}
 			end
-			@@tributes.push(tribute)
-			product.tributes.push(tribute)
-			comp.tributes.push(tribute)			
+			# tributes_hash.push(tribute)  NEED TO UNCOMMENT FOR DATABASE INPUT!!!!
+			# product.tributes.push(tribute)  NEED TO UNCOMMENT FOR DATABASE INPUT!!!!
+			# comp.tributes.push(tribute)	NEED TO UNCOMMENT FOR DATABASE INPUT!!!!
+			counter += 1		
 		end	
-        return tributes_names_hash
+        # return tributes_names_hash
+			puts ' ******* Nokogiri  - tributes hash*****************************'
+
+        			puts tributes_hash
+			puts ' ******* Nokogiri  - tributes hash*****************************'
+
+        return tributes_hash
 	end
 
 # this is the same as above but it retrieves the data from db rather than from memory
@@ -105,7 +131,19 @@ module ComparisonsHelper
 	# 	return @tributes_names_hash
 	# end
 
-	def vacuumAmazon(asin)
+	def retrieveRating(parsed_url)
+ #<div id="averageCustomerReviews" class="a-spacing-small" data-asin="B007RVHDAK" data-ref="dp_top_cm_cr_acr_pop_">
+    customer_rating = parsed_url.css("#handleBuy div span span span a span span").to_s[6..8].to_f
+    
+
+    # <span class="reviewCountTextLinkedHistogram" title="4.2 out of 5 stars">
+    #     <a href="javascript:void(0)" class="a-popover-trigger a-declarative">
+    #         <i class="a-icon a-icon-star a-star-4"></i>
+    #     <i class="a-icon a-icon-popover"></i></a><span class="a-letter-space"></span>
+    # </span>
+	end	
+
+	def vacuumAmazon(asin, tributes_hash)
 		request = Vacuum.new
 		request.configure(
 		    aws_access_key_id:     'AKIAJOKI7B4MLG6KQW3Q',
@@ -124,19 +162,35 @@ module ComparisonsHelper
 		# puts item_attributes
 		puts item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]
 		# puts 'the brand is ' + item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]["Brand"]
-		tributes_hash = item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]
-		
-		tributes_hash.each do |key, value| 
+		tributes_vacuum_hash = item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]
+		img = item_attributes["ItemLookupResponse"]["Items"]["Item"]["LargeImage"]["URL"]
+		tributes_hash[:image_url] = img
+		tributes_vacuum_hash.each do |key, value| 
 			if TRIBUTES_ALLOWED.has_key?(key.to_sym)
 				puts "the key is // " + key.to_s + 'and the value is ' + value.to_s
-				Tribute.new = {name: key,
+				
+				tributes_hash[key.to_sym] = {
 						value: value,
-						weight: WEIGHT_DEFAULT,
-						score: SCORE_DEFAULT}
+						weight: TRIBUTES_ALLOWED[key.to_sym][0],
+						score: SCORE_DEFAULT,
+						group: TRIBUTES_ALLOWED[key.to_sym][1],
+						placement: TRIBUTES_ALLOWED[key.to_sym][2],
+						asin: asin}
+					
+
 				# @tributes.push(@tribute)
+				# tributes_hash << tribute
 
 			end
+			
+			
 		end	
+		
+		puts ' *******vacuum amazon - tributes hash*****************************'
+
+			puts tributes_hash
+			puts ' *******vacuum amazon - tributes hash*****************************'
+			tributes_hash
 	end	
 
 
