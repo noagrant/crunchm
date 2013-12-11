@@ -57,10 +57,15 @@ module ComparisonsHelper
 	end	
 
 	def parseAmazon(raw_link)
-		parsed_array = raw_link.split(DELETEPOINT, 2)
-		@parsed = parsed_array[0]
-		@asin = @parsed.split('/').last
-		@tech_detail_link = @parsed.gsub(INSERTPOINT,TECHDATA)
+		#parsed_array = raw_link.split(DELETEPOINT, 2)
+		user_url_splitted = raw_link.gsub('/gp/', INSERTPOINT).split(INSERTPOINT, 2 )
+		begin_url = user_url_splitted.first
+		@asin = user_url_splitted.last.to_s[0..9]
+		@parsed = [begin_url, TECHDATA, @asin].join("")
+
+		# @parsed = parsed_array[0]
+		# @asin = @parsed.split('/').last
+		@tech_detail_link = @parsed
 		puts "PARSED AMAZON" + @parsed
 		puts "Tech detailed AMAZON" + @tech_detail_link
 		puts "ASIN is ==============================" + @asin

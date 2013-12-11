@@ -1,11 +1,12 @@
 <div class="row">
 
-	<table>
+	<table class='table table-striped'>
 <%# if name == :image_url  %>
 <!-- <td></td><td><img src= <%#= value %>></td> -->
 		<% @crunchm[:tributes_all_hash].each do |tribute, stats| %>
 			<tr><td><%= tribute.to_s %></td>
 				<td><%#= stats[:weight] %></td> <!--this will be the slider -->
+				<td><%= stats[:placement]%><td>
 
 			
 			<% @crunchm.each do |asin,values| #unless asin == tributes_all_hash %>
