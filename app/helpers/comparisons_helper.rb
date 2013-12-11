@@ -50,9 +50,14 @@ module ComparisonsHelper
 		parsed = parseAmazon(raw_link)
 		@tributes_hash = Hash.new
 		nokogiri_amazon = nokogiriAmazon(@asin, comp, product, @tech_detail_link, @tributes_hash)
+		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+		puts products_hash
+		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+
 		products_hash[@asin.to_sym] = vacuumAmazon(@asin, nokogiri_amazon)
 		tributes_all_hash = build_tributes_all_hash(tributes_all_hash, products_hash)
-		products_hash[:tributes_all_hash] = tributes_all_hash
+		products_hash[:tributes_all_hash] = sort_rows_by_placement_order(tributes_all_hash)
+
 		return products_hash
 	end	
 
@@ -176,7 +181,8 @@ module ComparisonsHelper
 		tributes_vacuum_hash.each do |key, value| 
 			if TRIBUTES_ALLOWED.has_key?(key.to_sym)
 				puts "the key is // " + key.to_s + 'and the value is ' + value.to_s
-				
+				puts value, TRIBUTES_ALLOWED[key.to_sym][0], TRIBUTES_ALLOWED[key.to_sym][1], TRIBUTES_ALLOWED[key.to_sym][2]
+				puts key.class
 				tributes_hash[key.to_sym] = {
 						value: value,
 						weight: TRIBUTES_ALLOWED[key.to_sym][0],
@@ -196,7 +202,12 @@ module ComparisonsHelper
 		products_hash.each do |asin, details|
 			details.each do |name, values|
 				if values.is_a? Hash
-					puts tributes_all_hash[name.to_sym] = {weight: (values[:weight]), group: (values[:group]), placement: (values[:placement])}
+					puts 'details.each name344***********J*****'
+					puts name
+					puts values
+					puts values[:weight]
+					puts tributes_all_hash
+					tributes_all_hash[name.to_sym] = {weight: (values[:weight]), group: (values[:group]), placement: (values[:placement])}
 				end
 			end
 		end
@@ -204,6 +215,18 @@ module ComparisonsHelper
 	end	
 
 
+	def current_comparison
+		@comparison = Comparison.find(params[:comparison_id])
+	end
+
+	def current_product
+		@product = Product.find(params[:product_id])
+	end
+
+	def sort_rows_by_placement_order(tributes_all_hash)
+		sorted_hash = tributes_all_hash.sort_by { |tribute, values| values[:placement]}
+		sorted_hash = sorted_hash.sort_by { |tribute, values| values[:group]}
+	end	
 
 #Do NOT allow:
 tributes_disallowed = %w(

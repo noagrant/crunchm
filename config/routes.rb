@@ -18,6 +18,6 @@ Crunchm::Application.routes.draw do
   # end
   resources :users, only: [:new, :create, :index, :show, :destroy]
   resources :sessions, only: [:new, :create, :destroy]
-  # resources :products, only: [:create, :update, :destroy]
+  resources :products, only: [:new, :create, :update, :destroy]
   # resources :tributes, only: [:create, :update, :destroy]
 end

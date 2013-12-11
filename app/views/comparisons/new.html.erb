@@ -3,7 +3,7 @@
 		<%= simple_form_for(@comparison, defaults: { wrapper_html: {class: 'form-group'}, input_html: { class: 'form-control' } })  do |f| %>
 		<!-- <div class="form-group"> -->
 			<%= f.simple_fields_for :products do |ff| %>
-				<%= ff.input :url, value: 'http://www.amazon.com/Samsung-Galaxy-Tab-7-Inch-White/dp/B00D02AGU4/ref=sr_1_2?s=electronics&ie=UTF8&qid=1386353560&sr=1-2&keywords=tablet' %>
+				<%= ff.input :url,  input_html: {value: 'http://www.amazon.com/Samsung-Galaxy-Tab-7-Inch-White/dp/B00D02AGU4/ref=sr_1_2?s=electronics&ie=UTF8&qid=1386353560&sr=1-2&keywords=tablet'} %>
 			<% end %>
 			<%= f.button :submit, value: 'Crunchm' %>
 		<%#= f.input :url, label: 'Enter a link to a product to compare', input_html: { class: 'input-xlarge' }  %>
@@ -11,6 +11,5 @@
 		<% end %>
 	</div>
 </div>
-URL1 = 'http://www.amazon.com/Samsung-Galaxy-Tab-7-Inch-White/dp/B00D02AGU4/ref=sr_1_2?s=electronics&ie=UTF8&qid=1386353560&sr=1-2&keywords=tablet'
-	URL2 = 'http://www.amazon.com/Google-Nexus-Tablet-7-Inch-Black/dp/B00DVFLJKQ/ref=sr_1_2?ie=UTF8&qid=1386612400&sr=8-2&keywords=7%22+tablet'
- placeholder: 'Paste here a link to an Amazon product'
+<!-- URL1 = 'http://www.amazon.com/Samsung-Galaxy-Tab-7-Inch-White/dp/B00D02AGU4/ref=sr_1_2?s=electronics&ie=UTF8&qid=1386353560&sr=1-2&keywords=tablet' -->
+	http://www.amazon.com/Google-Nexus-Tablet-7-Inch-Black/dp/B00DVFLJKQ/ref=sr_1_2?ie=UTF8&qid=1386612400&sr=8-2&keywords=7%22+tablet

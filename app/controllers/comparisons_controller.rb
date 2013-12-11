@@ -25,37 +25,12 @@ class ComparisonsController < ApplicationController
 
 	#Submit form and process, figure out the winning product
 	def create
-        @products_hash = Hash.new
-        @tributes_all_hash = Hash.new
-		@comparison = Comparison.new(comparison_params)
-		@user = current_user
+        @comparison = Comparison.new(comparison_params)
+   		@user = current_user
 		#!!!!!!!!!!!!!!! note: we need to change this to if parsed, not if saved
 		if @comparison.save
-			User.find(session[:user_id]).comparisons += [@comparison]
-			params[:comparison][:products_attributes].each do |a|
-				# because this returns the numerical key as a string instead of a key and "flattens" the hash
-				# we loop to access the actual hash that has the url value.
-				a.each do |b|
-					if b.is_a? Hash
-						# so b here is {:url => "google.com"} for instance.
-						# we push because @comparison.products is an array
-						@product = Product.create(url: b[:url])
-						
-						# In the future version:
-						@crunchm = crunchm(@comparison, @product, b[:url], @products_hash, @tributes_all_hash)
-						@comparison.products.push(@product)
-						@comparison.tributes.push()
-						
-						# parseAmazon (b[:url])
-						# p = Product.create (url: b[:url], name: name_from_nokogiri)
-						# tributes_from_nokogiri.each do |tribute|
-						#  t = Tribute.create ( tribute attributes )
-						#  p.tributes.push(t)
-						# end
-					end	
-				end
-			end
-			puts "SUCCESS"
+			session[:url_hash] = params[:comparison][:products_attributes]
+	        redirect_to edit_comparison_path(@comparison)
 		else
 			puts @comparison.errors.full_messages
 		end
@@ -64,8 +39,8 @@ class ComparisonsController < ApplicationController
 		# 	redirect_to comparisons_path
 		# else redirect_to :back, :flash=> { errors: @comparison.errors.full_messages}
 		# end
-        
-		render action: "edit"
+        # redirect_to edit_comparison_path(@comparison)
+		# render action: "edit"
 
 	end
 
@@ -73,12 +48,51 @@ class ComparisonsController < ApplicationController
 	#this is the page to add/delete tributes/products (add product calls ProductsController create action)
 	#change weight and scores. re-sort
 	def edit
+		@product = Product.new
+		puts params
         @comparison = Comparison.find(params[:id])
-		@array = make_first_column(@comparison) #make_first_column is a method inside comparison helper
+		@products_hash = Hash.new
+        @tributes_all_hash = Hash.new
+        @user = current_user
+		@user.comparisons += [@comparison]
+		session[:url_hash].each do |a|
+			# because this returns the numerical key as a string instead of a key and "flattens" the hash
+			# we loop to access the actual hash that has the url value.
+			a.each do |b|
+				if b.is_a? Hash
+					# so b here is {:url => "google.com"} for instance.
+					# we push because @comparison.products is an array
+					@product = Product.create(url: b[:url])
+					
+					# crunchm!!!!!!!!!
+					@crunchm = crunchm(@comparison, @product, b[:url], @products_hash, @tributes_all_hash)
+
+					puts "CRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHM"
+					puts @crunchm.keys
+					puts "CRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHM"
+
+					@comparison.products.push(@product)
+					@comparison.tributes.push()
+					
+					# parseAmazon (b[:url])
+					# p = Product.create (url: b[:url], name: name_from_nokogiri)
+					# tributes_from_nokogiri.each do |tribute|
+					#  t = Tribute.create ( tribute attributes )
+					#  p.tributes.push(t)
+					# end
+				end	
+			end
+		end
+		
+
 	end
 
 	#process edits, recalculates winner
 	def update
+		@user = current_user
+		@comparison = Comparison.find(params[:id])
+		# @comparison.products.crunchm(@comparison, product, raw_link, products_hash, tributes_all_hash)
+		redirect_to comparison_path
 	end
 
 	#if logged in - delete table
