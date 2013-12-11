@@ -1,24 +1,25 @@
 <div class="row">
 
 	<table>
-	<%#= @array.each do |x| %>
-	<tr>
-	<td><%#= x %></td>
-	</tr>
-	<%# end %>
-	</table>
+<%# if name == :image_url  %>
+<!-- <td></td><td><img src= <%#= value %>></td> -->
+		<% @crunchm[:tributes_all_hash].each do |tribute, stats| %>
+			<tr><td><%= tribute.to_s %></td>
+				<td><%#= stats[:weight] %></td> <!--this will be the slider -->
 
-	<table>
-
-		<% @crunchm.each do |key,value| %>
-		<tr>
-			<% if key== :image_url  %>
-			<td></td><td><img src= <%= value %>></td>
-		<% else %>
-			<td><%= key %></td>
-			<td><%= value %></td>
-		<% end %>
-		</tr>
+			
+			<% @crunchm.each do |asin,values| #unless asin == tributes_all_hash %>
+				<% unless asin == :tributes_all_hash   %>
+					<% if values.has_key?(tribute) && tribute != :image_url %>
+						<td><%= values[tribute][:value] %></td>
+						<td><%= values[tribute][:score] %></td><!--this will be the slider -->
+					<% else %>
+						<td>--</td>
+						<td>--</td>
+					<% end %>
+				<% end %>
+			<% end %>
+			</tr>
 		<% end %>
 	</table>
 

@@ -46,11 +46,14 @@ module ComparisonsHelper
 	}
 
 	# main function to handle the entire back end => will move to controller
-	def crunchm(comp, product, raw_link, tributes_names_hash)
+	def crunchm(comp, product, raw_link, products_hash, tributes_all_hash)
 		parsed = parseAmazon(raw_link)
 		@tributes_hash = Hash.new
-		nokogiri_amazon = nokogiriAmazon(@asin, comp, product, @tech_detail_link, tributes_names_hash, @tributes_hash)
-		vacuumAmazon(@asin, nokogiri_amazon)
+		nokogiri_amazon = nokogiriAmazon(@asin, comp, product, @tech_detail_link, @tributes_hash)
+		products_hash[@asin.to_sym] = vacuumAmazon(@asin, nokogiri_amazon)
+		tributes_all_hash = build_tributes_all_hash(tributes_all_hash, products_hash)
+		products_hash[:tributes_all_hash] = tributes_all_hash
+		return products_hash
 	end	
 
 	def parseAmazon(raw_link)
@@ -64,13 +67,13 @@ module ComparisonsHelper
 	end
 	
 	# NOKOGIRI STUFF GOES HERE
-	def nokogiriAmazon(asin, comp, product, parsed_url, tributes_names_hash, tributes_hash)
+	def nokogiriAmazon(asin, comp, product, parsed_url, tributes_hash)
 		# uses 'nokogiri' gem and 'open-uri'
 		counter = 0
 		technical_detail = Nokogiri::HTML(open(parsed_url))
 		# Amazon rating is not included in the item attributes, so we extract it separately
 		customer_rating = retrieveRating(technical_detail)
-		tributes_hash[:amazon_rating]= { value: customer_rating,
+		tributes_hash[:AmazonRating]= { value: customer_rating,
 								weight: 100,
 								score: SCORE_DEFAULT,
 								group: 1,
@@ -176,24 +179,24 @@ module ComparisonsHelper
 						group: TRIBUTES_ALLOWED[key.to_sym][1],
 						placement: TRIBUTES_ALLOWED[key.to_sym][2],
 						asin: asin}
-					
-
+				
 				# @tributes.push(@tribute)
 				# tributes_hash << tribute
-
 			end
-			
-			
 		end	
-		
-		puts ' *******vacuum amazon - tributes hash*****************************'
-
-			puts tributes_hash
-			puts ' *******vacuum amazon - tributes hash*****************************'
-			tributes_hash
+		tributes_hash
 	end	
 
-
+	def build_tributes_all_hash(tributes_all_hash, products_hash)
+		products_hash.each do |asin, details|
+			details.each do |name, values|
+				if values.is_a? Hash
+					puts tributes_all_hash[name.to_sym] = {weight: (values[:weight]), group: (values[:group]), placement: (values[:placement])}
+				end
+			end
+		end
+	 	tributes_all_hash	
+	end	
 
 
 

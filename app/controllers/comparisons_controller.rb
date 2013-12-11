@@ -25,7 +25,8 @@ class ComparisonsController < ApplicationController
 
 	#Submit form and process, figure out the winning product
 	def create
-        @tributes_names_hash = Hash.new
+        @products_hash = Hash.new
+        @tributes_all_hash = Hash.new
 		@comparison = Comparison.new(comparison_params)
 		@user = current_user
 		#!!!!!!!!!!!!!!! note: we need to change this to if parsed, not if saved
@@ -41,7 +42,7 @@ class ComparisonsController < ApplicationController
 						@product = Product.create(url: b[:url])
 						
 						# In the future version:
-						@crunchm = crunchm(@comparison, @product, b[:url], @tributes_names_hash)
+						@crunchm = crunchm(@comparison, @product, b[:url], @products_hash, @tributes_all_hash)
 						@comparison.products.push(@product)
 						@comparison.tributes.push()
 						
