@@ -11,16 +11,16 @@
 	<table class='table table-striped'>
 		<% @crunchm[:tributes_all_hash].each do |tribute, stats| %>
 			<tr>
-				<td><%= tribute.to_s.titleize %></td>
+				<td><%= tribute.to_s.titleize unless tribute == :image %></td>
 				<td><%#= stats[:weight] %></td> <!--this will be the slider -->
 				<td><%= stats[:placement]%><td>			
 			<% @crunchm.each do |asin,values| #unless asin == tributes_all_hash %>
 				<% unless asin == :tributes_all_hash   %>
-					<% if values.has_key?(tribute.to_s) && tribute != :image_url %>
+					<% if values.has_key?(tribute.to_s) && tribute != :image %>
 						<td><%= values[tribute.to_s][:value] %></td>
 						<td><%= values[tribute.to_s][:score] %></td><!--this will be the slider -->
-					<% elsif tribute == :image_url %>					
-						<td><img src= <%#= value %>></td>
+					<% elsif tribute == :image %>					
+						<td><img src= <%= values[tribute.to_s][:value] %>></td>
 						<td></td>
 					<% else %>
 						<td>--</td>

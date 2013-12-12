@@ -180,7 +180,7 @@ module ComparisonsHelper
 		puts item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]
 		# puts 'the brand is ' + item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]["Brand"]
 		tributes_vacuum_hash = item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]
-		img = item_attributes["ItemLookupResponse"]["Items"]["Item"]["LargeImage"]["URL"]
+		img = item_attributes["ItemLookupResponse"]["Items"]["Item"]["MediumImage"]["URL"]
 		tribute = Tribute.create(name: "image", value: img, asin: asin )
 		product.tributes.push(tribute)
 		comp.tributes.push(tribute)
