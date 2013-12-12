@@ -72,7 +72,7 @@ class ComparisonsController < ApplicationController
 					puts "CRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHM"
 
 					@comparison.products.push(@product)
-					@comparison.tributes.push()
+					# @comparison.tributes.push()
 					
 					# parseAmazon (b[:url])
 					# p = Product.create (url: b[:url], name: name_from_nokogiri)

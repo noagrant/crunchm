@@ -54,7 +54,7 @@ module ComparisonsHelper
 		puts products_hash
 		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
 
-		products_hash[@asin.to_sym] = vacuumAmazon(@asin, nokogiri_amazon)
+		products_hash[@asin.to_sym] = vacuumAmazon(@asin, nokogiri_amazon, product, comp)
 		tributes_all_hash = build_tributes_all_hash(tributes_all_hash, products_hash)
 		products_hash[:tributes_all_hash] = sort_rows_by_placement_order(tributes_all_hash)
 
@@ -79,7 +79,7 @@ module ComparisonsHelper
 	# NOKOGIRI STUFF GOES HERE
 	def nokogiriAmazon(asin, comp, product, parsed_url, tributes_hash)
 		# uses 'nokogiri' gem and 'open-uri'
-		counter = 0
+		counter = 50
 		technical_detail = Nokogiri::HTML(open(parsed_url))
 		# Amazon rating is not included in the item attributes, so we extract it separately
 		customer_rating = retrieveRating(technical_detail)
@@ -90,29 +90,55 @@ module ComparisonsHelper
 								placement: 0,
 								asin: asin
 								}
+
+		tribute = Tribute.create(name: "Amazon Rating",
+								value: customer_rating,
+								weight: 100,
+								score: SCORE_DEFAULT,
+								group: 1,
+								placement: 0,
+								asin: asin)
+
+		product.tributes.push(tribute) 
+		comp.tributes.push(tribute)
+
 	puts '++++====================================++++'
 	puts customer_rating
 	puts '++++====================================++++'
+	puts technical_detail.css("#technical-data .bucket .content li")
 		technical_detail.css("#technical-data .bucket .content li").each do |r| 
 		#  r.class # is a Nokogiri::XML::Element
 		#  technical_detail.class  # is a Nokogiri::HTML::Document
 			technical_html = r.to_s
-			
+	
+		
 
 			# if Amazon included a title for the attribute in a <b> tag
 			if technical_html.include?(':</b>')
                 key = technical_html.split("<b>").last.split(":</b>").first
 				value = technical_html.split('</b> ').last.split('</li>').first
 				# tributes_names_hash[name] = WEIGHT_DEFAULT
-				puts "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-				tributes_hash[key.to_sym]= { value: value,
-								weight: WEIGHT_DEFAULT,
-								score: SCORE_DEFAULT,
-								group: 2,
-								placement: counter,
-								asin: asin
-								}
-			
+
+				tribute = Tribute.create(name: key,
+					value: value,
+					weight: WEIGHT_DEFAULT,
+					score: SCORE_DEFAULT,
+					group: 2,
+					placement: counter,
+					asin: asin)
+
+				tributes_hash[key.to_sym] = { 	
+					name: key,
+					value: value,
+					weight: WEIGHT_DEFAULT,
+					score: SCORE_DEFAULT,
+					group: 2,
+					placement: counter,
+					asin: asin
+					}
+				# tribute = tributes_hash[key.to_sym]
+				puts tribute
+				puts tribute.class
 					
 			# else # 'there is no title for the attribute on Amazon's site
 			#will not display these features as vacuumAmazon will produce same features
@@ -120,17 +146,15 @@ module ComparisonsHelper
 				# 		value: technical_html.split('<li>').last.split('</li>').first,
 				# 		weight: WEIGHT_DEFAULT,
 				# 		score: SCORE_DEFAULT}
+			product.tributes.push(tribute) 
+			comp.tributes.push(tribute)
 			end
-			# tributes_hash.push(tribute)  NEED TO UNCOMMENT FOR DATABASE INPUT!!!!
-			# product.tributes.push(tribute)  NEED TO UNCOMMENT FOR DATABASE INPUT!!!!
-			# comp.tributes.push(tribute)	NEED TO UNCOMMENT FOR DATABASE INPUT!!!!
+			# tributes_hash.push(tribute)  
+			  
+				
 			counter += 1		
 		end	
         # return tributes_names_hash
-			puts ' ******* Nokogiri  - tributes hash*****************************'
-
-        			puts tributes_hash
-			puts ' ******* Nokogiri  - tributes hash*****************************'
 
         return tributes_hash
 	end
@@ -156,7 +180,7 @@ module ComparisonsHelper
     # </span>
 	end	
 
-	def vacuumAmazon(asin, tributes_hash)
+	def vacuumAmazon(asin, tributes_hash, product, comp)
 		request = Vacuum.new
 		request.configure(
 		    aws_access_key_id:     'AKIAJOKI7B4MLG6KQW3Q',
@@ -190,9 +214,15 @@ module ComparisonsHelper
 						group: TRIBUTES_ALLOWED[key.to_sym][1],
 						placement: TRIBUTES_ALLOWED[key.to_sym][2],
 						asin: asin}
-				
-				# @tributes.push(@tribute)
-				# tributes_hash << tribute
+				tribute = Tribute.create(name: 	key,
+						value: value.to_s,
+						weight: TRIBUTES_ALLOWED[key.to_sym][0],
+						score: SCORE_DEFAULT,
+						group: TRIBUTES_ALLOWED[key.to_sym][1],
+						placement: TRIBUTES_ALLOWED[key.to_sym][2],
+						asin: asin)
+				product.tributes.push(tribute) 
+				comp.tributes.push(tribute)
 			end
 		end	
 		tributes_hash
@@ -225,7 +255,7 @@ module ComparisonsHelper
 
 	def sort_rows_by_placement_order(tributes_all_hash)
 		sorted_hash = tributes_all_hash.sort_by { |tribute, values| values[:placement]}
-		sorted_hash = sorted_hash.sort_by { |tribute, values| values[:group]}
+		# sorted_hash = sorted_hash.sort_by { |tribute, values| values[:group]}
 	end	
 
 #Do NOT allow:

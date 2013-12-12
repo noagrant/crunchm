@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131206012236) do
+ActiveRecord::Schema.define(version: 20131211204236) do
 
   create_table "comparisons", force: true do |t|
     t.string   "name"
@@ -43,6 +43,9 @@ ActiveRecord::Schema.define(version: 20131206012236) do
     t.datetime "updated_at"
     t.string   "value"
     t.float    "score"
+    t.integer  "group"
+    t.integer  "placement"
+    t.string   "asin"
   end
 
   add_index "tributes", ["comparison_id"], name: "index_tributes_on_comparison_id"

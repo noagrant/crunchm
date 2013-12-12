@@ -21,6 +21,7 @@ class ProductsController < ApplicationController
 	def create
 		@comparison = current_comparison
 		@user = current_user
+		@product = Product.find(params[:product_id])
 		# @products_hash = ??? how do we bring this??
         # @tributes_all_hash 
 		# @comparison = Comparison.new(comparison_params)
