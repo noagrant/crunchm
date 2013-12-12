@@ -27,7 +27,7 @@ module ComparisonsHelper
 		IsAutographed: [10,1,23],
 		ItemDimensions: [1,1,12],
 		Languages: [1,2,29],
-		ListPrice: [100,1,2],
+		price: [100,1,2],
 		Manufacturer: [1,3,45],
 		Model: [1,1,8],
 		NumberOfItems: [1,1,17],
@@ -44,6 +44,10 @@ module ComparisonsHelper
 		Studio: [1,2,38],
 		Warranty: [1,2,39]
 	}
+
+	TRIBUTES_DISALLOWED = [
+		'Amazon.com Return Policy'
+	]
 
 	# main function to handle the entire back end => will move to controller
 	def crunchm(comp, product, raw_link)
@@ -74,11 +78,12 @@ module ComparisonsHelper
 		puts "ASIN is ==============================" + @asin
 	end
 	
-	# NOKOGIRI STUFF GOES HERE
+	# We're using NOKOGIRI to crowl tech detail page and bring attriutes not on item detail
 	def nokogiriAmazon(asin, comp, product, parsed_url)
 		# uses 'nokogiri' gem and 'open-uri'
-		counter = 50
+		counter = 50 # we start at 50 to place these at the bottom of the attributes list 
 		technical_detail = Nokogiri::HTML(open(parsed_url))
+		
 		# Amazon rating is not included in the item attributes, so we extract it separately
 		customer_rating = retrieveRating(technical_detail)
 		# tributes_hash[:AmazonRating]= { value: customer_rating,
@@ -88,7 +93,6 @@ module ComparisonsHelper
 		# 						placement: 0,
 		# 						asin: asin
 		# 						}
-
 		tribute = Tribute.create(name: "Amazon Rating",
 								value: customer_rating,
 								weight: 100,
@@ -96,31 +100,28 @@ module ComparisonsHelper
 								group: 1,
 								placement: 0,
 								asin: asin)
-
 		product.tributes.push(tribute) 
 		comp.tributes.push(tribute)
-
-	puts '++++====================================++++'
-	puts customer_rating
-	puts '++++====================================++++'
 	# puts technical_detail.css("#technical-data .bucket .content li")
 		technical_detail.css("#technical-data .bucket .content li").each do |r| 
 		#  r.class # is a Nokogiri::XML::Element
 		#  technical_detail.class  # is a Nokogiri::HTML::Document
 			technical_html = r.to_s
 			# if Amazon included a title for the attribute in a <b> tag
-			if technical_html.include?(':</b>')
+			if technical_html.include?(':</b>') 
                 key = technical_html.split("<b>").last.split(":</b>").first
 				value = technical_html.split('</b> ').last.split('</li>').first
-				tribute = Tribute.create(name: key,
-					value: value,
-					weight: WEIGHT_DEFAULT,
-					score: SCORE_DEFAULT,
-					group: 2,
-					placement: counter,
-					asin: asin)
-				product.tributes.push(tribute) 
-				comp.tributes.push(tribute)
+				unless TRIBUTES_DISALLOWED.include?(key)	
+					tribute = Tribute.create(name: key,
+						value: value,
+						weight: WEIGHT_DEFAULT,
+						score: SCORE_DEFAULT,
+						group: 2,
+						placement: counter,
+						asin: asin) 					
+					product.tributes.push(tribute) 
+					comp.tributes.push(tribute)
+				end
 				# tributes_hash[key.to_sym] = { 	
 				# 	name: key,
 				# 	value: value,
@@ -139,8 +140,7 @@ module ComparisonsHelper
 				# tribute = { 'Feature':
 				# 		value: technical_html.split('<li>').last.split('</li>').first,
 				# 		weight: WEIGHT_DEFAULT,
-				# 		score: SCORE_DEFAULT}
-			
+				# 		score: SCORE_DEFAULT}		
 			end
 			# tributes_hash.push(tribute)  				
 			counter += 1		
@@ -169,22 +169,46 @@ module ComparisonsHelper
 		)
 		params = {
 		  'ItemId' => asin,
-		  'ResponseGroup' => 'ItemAttributes,Images'
+		  'ResponseGroup' => 'ItemAttributes,Images,OfferFull'
 		}
 		results = request.item_lookup(params)
 		puts results.class
 		puts '************************************************************************************'
 		item_attributes = results.to_h
-		puts item_attributes.class
-		# puts item_attributes
-		puts item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]
-		# puts 'the brand is ' + item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]["Brand"]
 		tributes_vacuum_hash = item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]
+		
 		img = item_attributes["ItemLookupResponse"]["Items"]["Item"]["MediumImage"]["URL"]
+
+		# sale price is Amazon discounted price, but it is not always available
+		if item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]
+			price_hash = {
+				price: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]["FormattedPrice"],
+				# price_data: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]["Amount"]
+			}
+		else
+			price_hash = {
+				price: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["Price"]["FormattedPrice"],
+				# price_data: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["Price"]["Amount"]
+			}
+		end
+		
+			price_hash.each do |key, value|
+				tribute = Tribute.create(name: 	key,
+					value: value,
+					weight: TRIBUTES_ALLOWED[key.to_sym][0],
+					score: SCORE_DEFAULT,
+					group: TRIBUTES_ALLOWED[key.to_sym][1],
+					placement: TRIBUTES_ALLOWED[key.to_sym][2],
+					asin: asin)
+				product.tributes.push(tribute)
+				comp.tributes.push(tribute)		
+						end
+
+
 		tribute = Tribute.create(name: "image", value: img, asin: asin )
 		product.tributes.push(tribute)
 		comp.tributes.push(tribute)
-		# tributes_hash[:image_url] = img
+		
 		tributes_vacuum_hash.each do |key, value| 
 			if TRIBUTES_ALLOWED.has_key?(key.to_sym)
 				# puts "the key is // " + key.to_s + 'and the value is ' + value.to_s
@@ -206,11 +230,11 @@ module ComparisonsHelper
 						asin: asin)
 				product.tributes.push(tribute) 
 				comp.tributes.push(tribute)
+				
 			end
 		end	
 		# tributes_hash
 	end	
-
 	# def build_tributes_all_hash(tributes_all_hash, products_hash)
 	# 	products_hash.each do |asin, details|
 	# 		details.each do |name, values|
@@ -222,6 +246,12 @@ module ComparisonsHelper
 	#  	tributes_all_hash	
 	# end	
 
+	def calculate_crunchm_value
+		# algorithm to calculate ranking:
+		# weight for each attribute has three options: 1, 10 or 100
+		# value goes between 1 and 10 for each attribute-value
+		# for price and rating the products we calculate this value by deviding the pr
+	end	
 
 	def current_comparison
 		@comparison = Comparison.find(params[:comparison_id])
