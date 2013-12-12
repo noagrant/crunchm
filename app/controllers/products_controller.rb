@@ -21,7 +21,6 @@ class ProductsController < ApplicationController
 	def create
 		@comparison = current_comparison
 		@user = current_user
-		@product = Product.find(params[:product_id])
 		# @products_hash = ??? how do we bring this??
         # @tributes_all_hash 
 		# @comparison = Comparison.new(comparison_params)
@@ -29,14 +28,16 @@ class ProductsController < ApplicationController
 
 		#!!!!!!!!!!!!!!! note: we need to change this to if parsed, not if saved
 		# if @comparison.update
-			puts 'the new url is:::::::::::::::::::::::::::::::::::::::::::::::::'
-			puts url_new = params[:product][:products][:url]		
+			
+				url_new = params[:product][:products][:url]		
+				puts 'the new url is:::::::::::::::::::::::::::::::::::::::::::::::::'
+				puts url_new
 				@product = Product.create(url: url_new)
-				@products_hash =  eval(params[:product][:products][:products_hash])
+				# @products_hash =  eval(params[:product][:products][:products_hash])
 				# puts "products hash keys are :"
 				# puts @products_hash.keys
-				@tributes_all_hash = Hash[*@products_hash[:tributes_all_hash].flatten]
-				@crunchm = crunchm(@comparison, @product, url_new, @products_hash, @tributes_all_hash)
+				# @tributes_all_hash = Hash[*@products_hash[:tributes_all_hash].flatten]
+				@crunchm = crunchm(@comparison, @product, url_new)
 				@comparison.products.push(@product)
 				# @comparison.tributes.push()
 			puts "SUCCESSFUL NEW PRODUCT"

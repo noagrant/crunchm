@@ -1,10 +1,9 @@
 <div class="row">
 	<!-- search box to add another product to compare -->
 	<%= simple_form_for(@product, url: comparison_products_path(@comparison), action: :create, method: :post, defaults: { wrapper_html: {class: 'form-group'}, input_html: { class: 'form-control' } })  do |f| %>
-			<%= f.simple_fields_for :products do |ff| %>
-				<%= ff.input :url, placeholder: 'Paste here another link to an Amazon product' %>
-				<%= ff.input :products_hash, as: :hidden, input_html: {value: @crunchm} %> 
-			<% end %>
+			<%#= f.simple_fields_for :products do |ff| %>
+				<%= f.input :url, placeholder: 'Paste here another link to an Amazon product' %>
+				<%#= f.input :products_hash, as: :hidden, input_html: {value: @crunchm} %> 
 			<%= f.button :submit, value: 'Crunchm' %>
 		<% end %>
 	
@@ -17,9 +16,9 @@
 				<td><%= stats[:placement]%><td>			
 			<% @crunchm.each do |asin,values| #unless asin == tributes_all_hash %>
 				<% unless asin == :tributes_all_hash   %>
-					<% if values.has_key?(tribute) && tribute != :image_url %>
-						<td><%= values[tribute][:value] %></td>
-						<td><%= values[tribute][:score] %></td><!--this will be the slider -->
+					<% if values.has_key?(tribute.to_s) && tribute != :image_url %>
+						<td><%= values[tribute.to_s][:value] %></td>
+						<td><%= values[tribute.to_s][:score] %></td><!--this will be the slider -->
 					<% elsif tribute == :image_url %>					
 						<td><img src= <%#= value %>></td>
 						<td></td>

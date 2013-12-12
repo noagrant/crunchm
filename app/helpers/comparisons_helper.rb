@@ -46,19 +46,18 @@ module ComparisonsHelper
 	}
 
 	# main function to handle the entire back end => will move to controller
-	def crunchm(comp, product, raw_link, products_hash, tributes_all_hash)
+	def crunchm(comp, product, raw_link)
 		parsed = parseAmazon(raw_link)
-		@tributes_hash = Hash.new
-		nokogiri_amazon = nokogiriAmazon(@asin, comp, product, @tech_detail_link, @tributes_hash)
-		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-		puts products_hash
-		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-
-		products_hash[@asin.to_sym] = vacuumAmazon(@asin, nokogiri_amazon, product, comp)
-		tributes_all_hash = build_tributes_all_hash(tributes_all_hash, products_hash)
-		products_hash[:tributes_all_hash] = sort_rows_by_placement_order(tributes_all_hash)
-
-		return products_hash
+		# @tributes_hash = Hash.new
+		nokogiriAmazon(@asin, comp, product, @tech_detail_link)
+		# puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+		# puts products_hash
+		# puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+		vacuumAmazon(@asin, product, comp)
+		# products_hash[@asin.to_sym] = vacuumAmazon(@asin, product, comp)
+		# tributes_all_hash = build_tributes_all_hash(tributes_all_hash, products_hash)
+		# products_hash[:tributes_all_hash] = sort_rows_by_placement_order(tributes_all_hash)
+		# return products_hash
 	end	
 
 	def parseAmazon(raw_link)
@@ -67,7 +66,6 @@ module ComparisonsHelper
 		begin_url = user_url_splitted.first
 		@asin = user_url_splitted.last.to_s[0..9]
 		@parsed = [begin_url, TECHDATA, @asin].join("")
-
 		# @parsed = parsed_array[0]
 		# @asin = @parsed.split('/').last
 		@tech_detail_link = @parsed
@@ -77,19 +75,19 @@ module ComparisonsHelper
 	end
 	
 	# NOKOGIRI STUFF GOES HERE
-	def nokogiriAmazon(asin, comp, product, parsed_url, tributes_hash)
+	def nokogiriAmazon(asin, comp, product, parsed_url)
 		# uses 'nokogiri' gem and 'open-uri'
 		counter = 50
 		technical_detail = Nokogiri::HTML(open(parsed_url))
 		# Amazon rating is not included in the item attributes, so we extract it separately
 		customer_rating = retrieveRating(technical_detail)
-		tributes_hash[:AmazonRating]= { value: customer_rating,
-								weight: 100,
-								score: SCORE_DEFAULT,
-								group: 1,
-								placement: 0,
-								asin: asin
-								}
+		# tributes_hash[:AmazonRating]= { value: customer_rating,
+		# 						weight: 100,
+		# 						score: SCORE_DEFAULT,
+		# 						group: 1,
+		# 						placement: 0,
+		# 						asin: asin
+		# 						}
 
 		tribute = Tribute.create(name: "Amazon Rating",
 								value: customer_rating,
@@ -105,20 +103,15 @@ module ComparisonsHelper
 	puts '++++====================================++++'
 	puts customer_rating
 	puts '++++====================================++++'
-	puts technical_detail.css("#technical-data .bucket .content li")
+	# puts technical_detail.css("#technical-data .bucket .content li")
 		technical_detail.css("#technical-data .bucket .content li").each do |r| 
 		#  r.class # is a Nokogiri::XML::Element
 		#  technical_detail.class  # is a Nokogiri::HTML::Document
 			technical_html = r.to_s
-	
-		
-
 			# if Amazon included a title for the attribute in a <b> tag
 			if technical_html.include?(':</b>')
                 key = technical_html.split("<b>").last.split(":</b>").first
 				value = technical_html.split('</b> ').last.split('</li>').first
-				# tributes_names_hash[name] = WEIGHT_DEFAULT
-
 				tribute = Tribute.create(name: key,
 					value: value,
 					weight: WEIGHT_DEFAULT,
@@ -126,16 +119,17 @@ module ComparisonsHelper
 					group: 2,
 					placement: counter,
 					asin: asin)
-
-				tributes_hash[key.to_sym] = { 	
-					name: key,
-					value: value,
-					weight: WEIGHT_DEFAULT,
-					score: SCORE_DEFAULT,
-					group: 2,
-					placement: counter,
-					asin: asin
-					}
+				product.tributes.push(tribute) 
+				comp.tributes.push(tribute)
+				# tributes_hash[key.to_sym] = { 	
+				# 	name: key,
+				# 	value: value,
+				# 	weight: WEIGHT_DEFAULT,
+				# 	score: SCORE_DEFAULT,
+				# 	group: 2,
+				# 	placement: counter,
+				# 	asin: asin
+				# 	}
 				# tribute = tributes_hash[key.to_sym]
 				puts tribute
 				puts tribute.class
@@ -146,33 +140,19 @@ module ComparisonsHelper
 				# 		value: technical_html.split('<li>').last.split('</li>').first,
 				# 		weight: WEIGHT_DEFAULT,
 				# 		score: SCORE_DEFAULT}
-			product.tributes.push(tribute) 
-			comp.tributes.push(tribute)
+			
 			end
-			# tributes_hash.push(tribute)  
-			  
-				
+			# tributes_hash.push(tribute)  				
 			counter += 1		
 		end	
         # return tributes_names_hash
 
-        return tributes_hash
+        # return tributes_hash
 	end
-
-# this is the same as above but it retrieves the data from db rather than from memory
- #    def make_first_column(comparison)
-	# 	@tributes_names_hash = Hash.new
-	# 	@comparison.tributes.each do |x| 
-	# 		@tributes_names_hash[x.name] = WEIGHT_DEFAULT
-	# 	end
-	# 	return @tributes_names_hash
-	# end
 
 	def retrieveRating(parsed_url)
  #<div id="averageCustomerReviews" class="a-spacing-small" data-asin="B007RVHDAK" data-ref="dp_top_cm_cr_acr_pop_">
     customer_rating = parsed_url.css("#handleBuy div span span span a span span").to_s[6..8].to_f
-    
-
     # <span class="reviewCountTextLinkedHistogram" title="4.2 out of 5 stars">
     #     <a href="javascript:void(0)" class="a-popover-trigger a-declarative">
     #         <i class="a-icon a-icon-star a-star-4"></i>
@@ -180,7 +160,7 @@ module ComparisonsHelper
     # </span>
 	end	
 
-	def vacuumAmazon(asin, tributes_hash, product, comp)
+	def vacuumAmazon(asin, product, comp)
 		request = Vacuum.new
 		request.configure(
 		    aws_access_key_id:     'AKIAJOKI7B4MLG6KQW3Q',
@@ -201,19 +181,22 @@ module ComparisonsHelper
 		# puts 'the brand is ' + item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]["Brand"]
 		tributes_vacuum_hash = item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]
 		img = item_attributes["ItemLookupResponse"]["Items"]["Item"]["LargeImage"]["URL"]
-		tributes_hash[:image_url] = img
+		tribute = Tribute.create(name: "image", value: img, asin: asin )
+		product.tributes.push(tribute)
+		comp.tributes.push(tribute)
+		# tributes_hash[:image_url] = img
 		tributes_vacuum_hash.each do |key, value| 
 			if TRIBUTES_ALLOWED.has_key?(key.to_sym)
-				puts "the key is // " + key.to_s + 'and the value is ' + value.to_s
-				puts value, TRIBUTES_ALLOWED[key.to_sym][0], TRIBUTES_ALLOWED[key.to_sym][1], TRIBUTES_ALLOWED[key.to_sym][2]
-				puts key.class
-				tributes_hash[key.to_sym] = {
-						value: value,
-						weight: TRIBUTES_ALLOWED[key.to_sym][0],
-						score: SCORE_DEFAULT,
-						group: TRIBUTES_ALLOWED[key.to_sym][1],
-						placement: TRIBUTES_ALLOWED[key.to_sym][2],
-						asin: asin}
+				# puts "the key is // " + key.to_s + 'and the value is ' + value.to_s
+				# puts value, TRIBUTES_ALLOWED[key.to_sym][0], TRIBUTES_ALLOWED[key.to_sym][1], TRIBUTES_ALLOWED[key.to_sym][2]
+				# puts key.class
+				# tributes_hash[key.to_sym] = {
+				# 		value: value,
+				# 		weight: TRIBUTES_ALLOWED[key.to_sym][0],
+				# 		score: SCORE_DEFAULT,
+				# 		group: TRIBUTES_ALLOWED[key.to_sym][1],
+				# 		placement: TRIBUTES_ALLOWED[key.to_sym][2],
+				# 		asin: asin}
 				tribute = Tribute.create(name: 	key,
 						value: value.to_s,
 						weight: TRIBUTES_ALLOWED[key.to_sym][0],
@@ -225,24 +208,19 @@ module ComparisonsHelper
 				comp.tributes.push(tribute)
 			end
 		end	
-		tributes_hash
+		# tributes_hash
 	end	
 
-	def build_tributes_all_hash(tributes_all_hash, products_hash)
-		products_hash.each do |asin, details|
-			details.each do |name, values|
-				if values.is_a? Hash
-					puts 'details.each name344***********J*****'
-					puts name
-					puts values
-					puts values[:weight]
-					puts tributes_all_hash
-					tributes_all_hash[name.to_sym] = {weight: (values[:weight]), group: (values[:group]), placement: (values[:placement])}
-				end
-			end
-		end
-	 	tributes_all_hash	
-	end	
+	# def build_tributes_all_hash(tributes_all_hash, products_hash)
+	# 	products_hash.each do |asin, details|
+	# 		details.each do |name, values|
+	# 			if values.is_a? Hash
+	# 				tributes_all_hash[name.to_sym] = {weight: (values[:weight]), group: (values[:group]), placement: (values[:placement])}
+	# 			end
+	# 		end
+	# 	end
+	#  	tributes_all_hash	
+	# end	
 
 
 	def current_comparison
@@ -253,10 +231,49 @@ module ComparisonsHelper
 		@product = Product.find(params[:product_id])
 	end
 
-	def sort_rows_by_placement_order(tributes_all_hash)
-		sorted_hash = tributes_all_hash.sort_by { |tribute, values| values[:placement]}
-		# sorted_hash = sorted_hash.sort_by { |tribute, values| values[:group]}
-	end	
+	def create_table_hash(comparison, product)
+
+		t = comparison.tributes.group("name").order("placement")
+		tributes_all_hash = Hash.new
+		t.each do |x|
+			tributes_all_hash[x.name.to_sym] = {weight: x.weight, placement: x.placement, group: x.group}
+			# puts x.name
+			# puts x.weight
+			# puts x.placement
+
+
+		end
+		asin_hash = comparison.tributes.group('asin')
+		products_hash = Hash.new
+		
+		# puts ' &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+		asin_hash.each do |t|
+			
+			
+			tribute_data = comparison.tributes.where( asin: t.asin )
+			# puts tribute_data
+			# puts '##############'
+			products_hash[t.asin.to_sym] = Hash.new
+			tribute_data.each do |x|
+				
+				products_hash[t.asin.to_sym][x.name] = {
+						value: x.value,
+						weight: x.weight,
+						score: x.score,
+						group: x.group,
+						placement: x.placement
+						}
+			end
+		end
+		products_hash[:tributes_all_hash] = tributes_all_hash
+
+		products_hash 
+
+	end
+
+	# def sort_rows_by_placement_order(tributes_all_hash)
+	# 	sorted_hash = tributes_all_hash.sort_by { |tribute, values| values[:placement]}
+	# end	
 
 #Do NOT allow:
 tributes_disallowed = %w(

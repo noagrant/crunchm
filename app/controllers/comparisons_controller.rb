@@ -48,13 +48,15 @@ class ComparisonsController < ApplicationController
 	#this is the page to add/delete tributes/products (add product calls ProductsController create action)
 	#change weight and scores. re-sort
 	def edit
-		@product = Product.new
+		# @product = Product.new
 		puts params
         @comparison = Comparison.find(params[:id])
-		@products_hash = Hash.new
-        @tributes_all_hash = Hash.new
+		# @products_hash = Hash.new
+        # @tributes_all_hash = Hash.new
         @user = current_user
 		@user.comparisons += [@comparison]
+		# @product = Product.create(url: session[0][:url_hash][:url])
+		# @product = Product.create(url: session[1][:url_hash][:url])
 		session[:url_hash].each do |a|
 			# because this returns the numerical key as a string instead of a key and "flattens" the hash
 			# we loop to access the actual hash that has the url value.
@@ -65,11 +67,10 @@ class ComparisonsController < ApplicationController
 					@product = Product.create(url: b[:url])
 					
 					# crunchm!!!!!!!!!
-					@crunchm = crunchm(@comparison, @product, b[:url], @products_hash, @tributes_all_hash)
-
-					puts "CRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHM"
-					puts @crunchm.keys
-					puts "CRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHM"
+					crunchm(@comparison, @product, b[:url])
+					# puts "CRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHM"
+					# # puts @crunchm.keys
+					# puts "CRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHM"
 
 					@comparison.products.push(@product)
 					# @comparison.tributes.push()
@@ -80,11 +81,14 @@ class ComparisonsController < ApplicationController
 					#  t = Tribute.create ( tribute attributes )
 					#  p.tributes.push(t)
 					# end
+					
+					# end
+
+
 				end	
 			end
-		end
-		
-
+		end	
+		@crunchm = create_table_hash(@comparison, @product)
 	end
 
 	#process edits, recalculates winner
