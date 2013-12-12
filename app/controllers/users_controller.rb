@@ -11,7 +11,7 @@ class UsersController < ApplicationController
   	@user = User.new(user_params)
     if @user.save
       sign_in @user
-      redirect_to user_comparisons_path @user
+      redirect_to new_comparison_path @user
       #redirect_to :back
     else
       redirect_to :back, flash: { state: 'register', errors: @user.errors.full_messages } 
