@@ -231,7 +231,7 @@ module ComparisonsHelper
 		@product = Product.find(params[:product_id])
 	end
 
-	def create_table_hash(comparison, product)
+	def create_table_hash(comparison)
 
 		t = comparison.tributes.group("name").order("placement")
 		tributes_all_hash = Hash.new

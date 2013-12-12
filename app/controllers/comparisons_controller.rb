@@ -88,7 +88,7 @@ class ComparisonsController < ApplicationController
 				end	
 			end
 		end	
-		@crunchm = create_table_hash(@comparison, @product)
+		@crunchm = create_table_hash(@comparison)
 	end
 
 	#process edits, recalculates winner
