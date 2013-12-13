@@ -8,36 +8,29 @@
 		<% end %>
 	
 	<!-- Display comparison results -->
-	<table class='table table-striped'>
+	<table class='table table-striped draggable'>
+		<thead><tr><th>attributes</th><th>Product 1</th><th>Product 2</th><th></th><th></th></tr></thead>
+		<tbody>
+
 		<% @crunchm[:tributes_all_hash].each do |tribute, stats| %>
 			<tr>
-				<td><%= tribute.to_s.titleize unless [:image, :price_data].include?(tribute)  %></td>
-				<td><%#= stats[:weight] %></td> <!--this will be the slider -->
-				<td><%= stats[:placement]%><td>			
+				<td><%= tribute.to_s.titleize unless [:image, :price_data].include?(tribute)  %><p class='slider'><%= stats[:weight] %></p><p><%= stats[:placement]%></p></td>
 			<% @crunchm.each do |asin,values| #unless asin is the hash of attributes named tributes_all_hash %>
 				<% unless asin == :tributes_all_hash   %>
-					
 					<% if values.has_key?(tribute.to_s) && [:image, :price_data].exclude?(tribute) && values[tribute.to_s][:value] != '0.0'%>
-						<td><%= values[tribute.to_s][:value] %></td>
-						<td><%= values[tribute.to_s][:score] %></td><!--this will be the slider -->
-					
+						<td><%= values[tribute.to_s][:value] %><p class="slider"><%= values[tribute.to_s][:score] %></p></td>
 					<% elsif tribute == :image %>					
 						<td><img src= <%= values[tribute.to_s][:value] %>></td>
-						<td></td>
-					
 					<% elsif values.has_key?(tribute.to_s) && values[tribute.to_s][:value] == '0.0' %>
-						<td>N/A</td>
-						<td></td>
-					
+						<td>N/A</td>										
 					<% else %>
 						<td>--</td>
-						<td>--</td>
-					
 					<% end %>
 				<% end %>
 			<% end %>
 			</tr>
 		<% end %>
+		</tbody>
 	</table>
 
 	

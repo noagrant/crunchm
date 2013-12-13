@@ -5,7 +5,50 @@
     
     <%= stylesheet_link_tag "comparisons", media: "all", "data-turbolinks-track" => true %>
     <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="dragtable.js"></script>
+    <script type="text/javascript" src="jquery.tablesorter.js"></script> 
+      
+    <script>
+        $(function() {
+
+           $( ".slider" ).each(function() {
+      // read initial values from markup and remove that
+              var value = parseInt( $( this ).text(), 10 );
+              $( this ).empty().slider({
+                value: value,
+                range: "min",
+                animate: true,
+                orientation: "horizontal"
+
+
+              });
+            
+          });
+         
+        });
+
+        $(document).ready(function(){
+          
+           //  $(".slider").css('visibility','hidden');
+
+           // $('table').mouseover(function(){
+           //    $('.slider').css('visiblity','visible');
+           // });
+
+        });
+
+        // $(function() {
+
+        //    $('#table').tablesorter();
+        // });
+    </script>
     <%= csrf_meta_tags %>
+
+
+
   </head>
   <body>
   <div class="container">
