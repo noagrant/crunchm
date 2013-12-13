@@ -63,6 +63,10 @@ GEM
     multi_xml (0.5.5)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
+    pakunok (0.0.3)
+      execjs
+      rails (>= 3.1.0)
+      sprockets (>= 2.0.0)
     polyglot (0.3.3)
     rack (1.5.2)
     rack-test (0.6.2)
@@ -129,6 +133,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   nokogiri (~> 1.6.0)
+  pakunok
   rails (= 4.0.1)
   rails-footnotes
   sass-rails (~> 4.0.0)

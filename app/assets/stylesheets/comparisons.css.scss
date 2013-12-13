@@ -6,8 +6,10 @@ $navbar-default-bg: #A1C5C9;
 $navbar-default-color: #fff;
 @import 'bootstrap';
 
+.bg-teal{
+	background-color: #A1C5C9;
+}
 
-//.slider {max-width:100px; height:2px; text-align: center}
 .th {max-width:200px;}
 
 td, th, p, span {max-width:200px; vertical-align: bottom}
@@ -19,7 +21,7 @@ th span {text-align: center;}
 
 .ui-widget-content {height:2px;}
 
-
+.slider-container {width:160px; height:15px;}
 .slider {
 	width:150px;
 	position: absolute;

@@ -10,7 +10,7 @@
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <!-- <script src="dragtable.js"></script> -->
-    <script type="text/javascript" src="jquery.tablesorter.js"></script>
+    <!-- <script type="text/javascript" src="jquery.tablesorter.js"></script> -->
       
     <script>
         $(function() {
@@ -18,31 +18,66 @@
            // $( ".slider" ).each(function() {
       // read initial values from markup and remove that
               // var value = parseInt( $( this ).next().text(), 10 );
-              $( ".slider").slider({
-                min:0,
-                max: 100,
-                value: 33,
-                range: "min",
-                orientation: "horizontal",
-                slide: function(event, ui){
-                  $(".weight-value").val(ui.value);
-                }
+              // $( ".slider").slider({
+              //   min:0,
+              //   max: 100,
+              //   value: 33,
+              //   range: "min",
+              //   orientation: "horizontal",
+              //   slide: function(event, ui){
+              //     $(".weight-value").val(ui.value);
+              //   }
 
 
-              });
-              $(".weight-value").val($(".slider").slider("value"));
+              // });
+              // $(".weight-value").val($(".slider").slider("value"));
             
-          // });
-         
+          
         });
 
         $(document).ready(function(){
-          
-           //  $(".slider").css('visibility','hidden');
+          $( ".slider" ).each(function() {
 
-           // $('table').mouseover(function(){
-           //    $('.slider').css('visiblity','visible');
-           // });
+            // });
+            // $( ".slider" ).slider({
+            //     orientation: "horizontal",
+            //     range: "min",
+            //     min: 0,
+            //     max: 100,
+            //     value: 60,
+            //     slide: function( event, ui ) {
+            //       $( ".weight-value" ).val( ui.value );
+            //     }
+            //   });
+            //   $( ".weight-value" ).val( $( ".slider" ).slider( "value" ) );
+            // });
+
+
+              // $( ".slider" ).each(function() {
+
+            $(this).slider({
+                orientation: "horizontal",
+                range: "min",
+                min: 0,
+                max: 100,
+                value: 60,
+                slide: function( event, ui ) {
+                  $(this).next().val( ui.value );
+                }
+              });
+              $(this).next().val($(this).slider( "value" ) );
+            });
+         
+          
+          $(".slider").hide();
+
+           $(document).on('mouseenter','.td',function(){
+              $(this).find('.slider').fadeIn(300);
+           });
+
+            $(document).on('mouseleave','.td',function(){
+              $(this).find('.slider').fadeOut(300);
+           });
 
         });
 

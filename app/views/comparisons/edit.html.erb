@@ -6,6 +6,11 @@
 				<%#= f.input :products_hash, as: :hidden, input_html: {value: @crunchm} %> 
 			<%= f.button :submit, value: 'Crunchm', class: 'btn btn-warning btn-lg centered col-md-4' %>
 		<% end %>
+	<div id="slider-vertical" style="height:200px;"></div>
+	<p>
+  
+  <input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;">
+</p>
 	
 	<!-- Display comparison results -->
 	<table class='table table-striped draggable'>
@@ -40,23 +45,24 @@
 		<% @crunchm[:tributes_all_hash].each do |tribute, stats| %>
 			<% unless [:image, :price_data, :Title].include?(tribute) %>
 				<tr>
-					<td><%= tribute.to_s.titleize unless [:image, :price_data].include?(tribute)  %>
-						<p class='slider'></p><p class='weight-value'><%= stats[:weight] %></p><p><%#= stats[:placement]%></p>
+					<td class='td'><%= tribute.to_s.titleize unless [:image, :price_data].include?(tribute)  %>
+						<div class='slider-container'><p class='slider'></p><p class='weight-value'><%= stats[:weight] %></p></div><p><%#= stats[:placement]%></p>
 					</td>
 					<% @crunchm.each do |asin,values| #unless asin is the hash of attributes named tributes_all_hash %>
 						<% unless asin == :tributes_all_hash   %>
 						<% if values.has_key?(tribute.to_s) && [:image, :price_data].exclude?(tribute) && values[tribute.to_s][:value] != '0.0'%>
 							<% if tribute == :Feature %>
-								<td><ul>
+								<td class='td'><ul>
 									<% values[tribute.to_s][:value][2..-3].split('","').each do |feature|%>
 									<li><%= feature %></li>
 									<% end %>
 								  </ul>
-								<p class="slider"><%#= values[tribute.to_s][:score] %></p>
+								<div class='slider-container'><p class="slider"><%#= values[tribute.to_s][:score] %></p></div>
 								</td>	
 							<% else %>		
-								<td><%= values[tribute.to_s][:value] %>	
-									<p class="slider"><%#= values[tribute.to_s][:score] %></p>
+								<td class='td'><%= values[tribute.to_s][:value] %>	
+									<div class='slider-container'><p class="slider"><%#= values[tribute.to_s][:score] %></p></div>
+									<p></p>
 								</td>
 							<% end %>
 						<% elsif tribute == :image %>					

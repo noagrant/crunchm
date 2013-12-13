@@ -266,9 +266,11 @@ module ComparisonsHelper
 		
 		comparison.products.each do |product|
 			product.ranking = 0
-			comparison.tributes.each do |tribute|
+
+			product.tributes.each do |tribute|
 				product.ranking += ((tribute.score)*(tribute.weight)) if !tribute.score.nil?
 			end
+			product.save
 		end		
 	end	
 
@@ -345,7 +347,8 @@ module ComparisonsHelper
 		asin_hash = comparison.tributes.group('asin')
 		products_hash = Hash.new
 		
-		# puts ' &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+		puts ' &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+		puts params[:id]
 		asin_hash.each do |t|
 			
 			
@@ -369,6 +372,8 @@ module ComparisonsHelper
 		products_hash 
 
 	end
+
+
 
 	# def sort_rows_by_placement_order(tributes_all_hash)
 	# 	sorted_hash = tributes_all_hash.sort_by { |tribute, values| values[:placement]}
