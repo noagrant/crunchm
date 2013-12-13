@@ -15,13 +15,24 @@
 				<% @crunchm.each do |asin,values| #unless asin is the hash of attributes named tributes_all_hash %>
 					<% unless asin == :tributes_all_hash   %>
 						<th class='th'>
-							<span><%= values['Title'][:value]%></span>
 							<p><img src= <%= values['image'][:value] %>></p>
+						</th>
+					<% end %>
+				<% end %>
+			</tr>
+			<tr>
+				<th></th>
+				<% @crunchm.each do |asin,values| #unless asin is the hash of attributes named tributes_all_hash %>
+					<% unless asin == :tributes_all_hash   %>
+						<th class='th' id='noborder'>
+						
+							<span><%= values['Title'][:value]%></span>
+							
 						</th>
 
 					<% end %>
 				<% end %>
-				
+
 			</tr>
 		</thead>
 		<tbody>
@@ -29,10 +40,8 @@
 		<% @crunchm[:tributes_all_hash].each do |tribute, stats| %>
 			<% unless [:image, :price_data, :Title].include?(tribute) %>
 				<tr>
-	<<<<<<< HEAD
-	=======
 					<td><%= tribute.to_s.titleize unless [:image, :price_data].include?(tribute)  %>
-						<p class='slider'><%= stats[:weight] %></p><p><%= stats[:placement]%></p>
+						<p class='slider'></p><p class='weight-value'><%= stats[:weight] %></p><p><%#= stats[:placement]%></p>
 					</td>
 					<% @crunchm.each do |asin,values| #unless asin is the hash of attributes named tributes_all_hash %>
 						<% unless asin == :tributes_all_hash   %>
@@ -43,11 +52,11 @@
 									<li><%= feature %></li>
 									<% end %>
 								  </ul>
-								<p class="slider"><%= values[tribute.to_s][:score] %></p>
+								<p class="slider"><%#= values[tribute.to_s][:score] %></p>
 								</td>	
 							<% else %>		
 								<td><%= values[tribute.to_s][:value] %>	
-									<p class="slider"><%= values[tribute.to_s][:score] %></p>
+									<p class="slider"><%#= values[tribute.to_s][:score] %></p>
 								</td>
 							<% end %>
 						<% elsif tribute == :image %>					

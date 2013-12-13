@@ -9,25 +9,30 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script src="dragtable.js"></script>
-    <script type="text/javascript" src="jquery.tablesorter.js"></script> 
+    <!-- <script src="dragtable.js"></script> -->
+    <script type="text/javascript" src="jquery.tablesorter.js"></script>
       
     <script>
         $(function() {
 
-           $( ".slider" ).each(function() {
+           // $( ".slider" ).each(function() {
       // read initial values from markup and remove that
-              var value = parseInt( $( this ).text(), 10 );
-              $( this ).empty().slider({
-                value: value,
+              // var value = parseInt( $( this ).next().text(), 10 );
+              $( ".slider").slider({
+                min:0,
+                max: 100,
+                value: 33,
                 range: "min",
-                animate: true,
-                orientation: "horizontal"
+                orientation: "horizontal",
+                slide: function(event, ui){
+                  $(".weight-value").val(ui.value);
+                }
 
 
               });
+              $(".weight-value").val($(".slider").slider("value"));
             
-          });
+          // });
          
         });
 

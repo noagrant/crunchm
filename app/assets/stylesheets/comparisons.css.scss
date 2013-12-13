@@ -13,7 +13,8 @@ $navbar-default-color: #fff;
 td, th, p, span {max-width:200px; vertical-align: bottom}
 th span {text-align: center;}
 
-td .slider { }
+.th {border: none}
+// #noborder {border-top: none; border-color:white;}
 
 
 .ui-widget-content {height:2px;}
@@ -23,6 +24,7 @@ td .slider { }
 	width:150px;
 	position: absolute;
 	bottom: 1px;
+	height: 1px;
 }
 
 .scroll_down{
@@ -52,7 +54,8 @@ td{
 	width: auto;
 }
 
-td .slider .ui-slider {background: #F0AD4E}
-td .slider .ui-slider-range {background: #F0AD4E}
-td .slider .ui-state-default {background: #fff}
+
+td .slider .ui-slider {background: #F0AD4E;}
+td .slider .ui-slider-range {background: #F0AD4E;}
+td .slider .ui-state-default {background: #fff;}
 
