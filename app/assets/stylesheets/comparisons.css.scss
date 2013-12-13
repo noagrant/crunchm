@@ -1,15 +1,25 @@
 // Place all the styles related to the Comparisons controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
 $navbar-default-bg: #A1C5C9;
+@import 'bootstrap';
 
-.slider {width:150px;}
+.slider {max-width:100px; height:2px; text-align: center}
+.th {max-width:200px;}
+
+td, th, p, span {max-width:200px; vertical-align: bottom}
+th span {text-align: center;}
+
+td .slider { }
 
 
 
-td .slider .ui-slider {background: #f7fa96}
-td .slider .ui-slider-range {background: #f7fa96}
-td .slider .ui-state-default {background: #f8fa96}
+
+.ui-widget-content {height:2px;}
+td .slider .ui-slider {background: #f7fa96;}
+td .slider .ui-slider-range {background: #f7fa96; height:2px;}
+td .slider .ui-state-default {background: #f8fa96;}
 
 
 

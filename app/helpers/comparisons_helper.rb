@@ -275,14 +275,19 @@ module ComparisonsHelper
 		comparison.tributes.where(name: 'price').each do |tribute |
 			prices << tribute.value[1..-1].to_f if tribute.value[0] == '$'
 		end
+		puts prices
 		lowest_price = prices.min
 
 		# score for price
 		comparison.tributes.where(name: 'price').each do |tribute |
+			puts "float should be here ##22222222222222222222222222222222222"
+			puts tribute.value[1..-1].to_f
 			if tribute.value[1..-1].to_f == lowest_price
 				tribute.score = 1
-			else
+			elsif !lowest_price.nil? && !tribute.value.nil?
 				tribute.score = lowest_price / (tribute.value[1..-1].to_f)
+			else
+				tribute.score = 0
 			end
 		end
 
