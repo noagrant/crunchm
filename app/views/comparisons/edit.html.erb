@@ -6,12 +6,13 @@
 				<%#= f.input :products_hash, as: :hidden, input_html: {value: @crunchm} %> 
 			<%= f.button :submit, value: 'Crunchm', class: 'btn btn-warning btn-lg centered col-md-4' %>
 		<% end %>
-	<div id="slider-vertical" style="height:200px;"></div>
 	<p>
   
   <input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;">
 </p>
-	
+
+<% sorted = @comparison.products.order(:ranking) %>
+<%#= sorted.last.tributes.first.asin %> <!-- the highest ranking product -->
 	<!-- Display comparison results -->
 	<table class='table table-striped draggable'>
 		<thead>
@@ -20,7 +21,10 @@
 				<% @crunchm.each do |asin,values| #unless asin is the hash of attributes named tributes_all_hash %>
 					<% unless asin == :tributes_all_hash   %>
 						<th class='th'>
-							<p><img src= <%= values['image'][:value] %>></p>
+							<% if asin.to_s == sorted.last.tributes.first.asin %>
+								<p>WINNER</p>
+							<% end %> 
+							<img src= <%= values['image'][:value] %>>
 						</th>
 					<% end %>
 				<% end %>
@@ -53,7 +57,7 @@
 						<% if values.has_key?(tribute.to_s) && [:image, :price_data].exclude?(tribute) && values[tribute.to_s][:value] != '0.0'%>
 							<% if tribute == :Feature %>
 								<td class='td'><ul>
-									<% values[tribute.to_s][:value][2..-3].split('","').each do |feature|%>
+									<% values[tribute.to_s][:value][2..-3].split('", "').each do |feature|%>
 									<li><%= feature %></li>
 									<% end %>
 								  </ul>

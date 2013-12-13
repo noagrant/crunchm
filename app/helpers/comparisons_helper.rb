@@ -341,6 +341,10 @@ module ComparisonsHelper
 			# puts x.name
 			# puts x.weight
 			# puts x.placement
+		# products = Product.where(comparison_id: params[:id]).order('ranking DESC')
+		products = current_comparison.products.order('ranking DESC')
+		puts pr
+		# A.each{|x| puts x.ranking} # this could be something
 
 
 		end

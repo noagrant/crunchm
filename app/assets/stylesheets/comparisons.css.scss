@@ -12,16 +12,26 @@ $navbar-default-color: #fff;
 
 .th {max-width:200px;}
 
-td, th, p, span {max-width:200px; vertical-align: bottom}
-th span {text-align: center;}
+td, th, p, span {max-width:200px; 
+					vertical-align: bottom;
+					text-align: center;}
 
-.th {border: none}
+.td li {text-align:left;}
+
+
+th span {text-align: center; 
+			margin: 0 auto;}
+
+.th {border: none; text-align:center;}
 // #noborder {border-top: none; border-color:white;}
 
 
 .ui-widget-content {height:2px;}
 
-.slider-container {width:160px; height:15px;}
+.slider-container {width:160px; 
+					height:15px;
+					margin: 0 auto;}
+
 .slider {
 	width:150px;
 	position: absolute;
