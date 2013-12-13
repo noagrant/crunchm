@@ -58,6 +58,9 @@ module ComparisonsHelper
 		# puts products_hash
 		# puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
 		vacuumAmazon(@asin, product, comp)
+		calculate_price_score
+		calculate_amazon_rating_score
+		calculate_crunchm_value
 		# products_hash[@asin.to_sym] = vacuumAmazon(@asin, product, comp)
 		# tributes_all_hash = build_tributes_all_hash(tributes_all_hash, products_hash)
 		# products_hash[:tributes_all_hash] = sort_rows_by_placement_order(tributes_all_hash)
@@ -250,18 +253,73 @@ module ComparisonsHelper
 		# algorithm to calculate ranking:
 		# weight for each attribute has three options: 1, 10 or 100
 		# value goes between 1 and 10 for each attribute-value
-		# for price and rating the products we calculate this value by deviding the pr
+		# for price and amazon rating we calculate product's attribute value by deviding the lowest value by this product's value and timing the quatient by 10
+		# we then add the weighted score
+		comparison = current_comparison
+		
+		# calculate_price_score
+		# calculate_amazon_rating_score
+		
+		comparison.products.each do |product|
+			product.ranking = 0
+			comparison.tributes.each do |tribute|
+				product.ranking += ((tribute.score)*(tribute.weight)) if !tribute.score.nil?
+			end
+		end		
+	end	
+
+	def calculate_price_score
+		comparison = current_comparison
+		# find the lowest price
+		prices = []
+		comparison.tributes.where(name: 'price').each do |tribute |
+			prices << tribute.value[1..-1].to_f if tribute.value[0] == '$'
+		end
+		lowest_price = prices.min
+
+		# score for price
+		comparison.tributes.where(name: 'price').each do |tribute |
+			if tribute.value[1..-1].to_f == lowest_price
+				tribute.score = 1
+			else
+				tribute.score = lowest_price / (tribute.value[1..-1].to_f)
+			end
+		end
+
+	end
+
+	def calculate_amazon_rating_score
+		comparison = current_comparison
+		# find the lowest rating
+		ratings = []
+		comparison.tributes.where(name: 'customer_rating').each do |tribute |
+			ratings << tribute.value if tribute.value > 0
+		end
+		lowest_rating = ratings.min
+
+		# score for customer rating
+		comparison.tributes.where(name: 'customer_rating').each do |tribute |
+			if tribute.value == 0
+				tribute.score = 0.5
+			else
+				tribute.score = lowest_rating / tribute.value
+			end
+		end
 	end	
 
 	def current_comparison
-		@comparison = Comparison.find(params[:comparison_id])
+		if params[:comparison_id]
+			@comparison = Comparison.find(params[:comparison_id])
+		else
+			@comparison = Comparison.find(params[:id])	
+		end	
 	end
 
 	def current_product
 		@product = Product.find(params[:product_id])
 	end
 
-	def create_table_hash(comparison, product)
+	def create_table_hash(comparison)
 
 		t = comparison.tributes.group("name").order("placement")
 		tributes_all_hash = Hash.new
