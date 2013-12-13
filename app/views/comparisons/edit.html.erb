@@ -1,10 +1,10 @@
 <div class="row">
 	<!-- search box to add another product to compare -->
-	<%= simple_form_for(@product, url: comparison_products_path(@comparison), action: :create, method: :post, defaults: { wrapper_html: {class: 'form-group'}, input_html: { class: 'form-control' } })  do |f| %>
+	<%= simple_form_for(@product, url: comparison_products_path(@comparison), action: :create, method: :post, defaults: { wrapper_html: {class: 'form-group'}, label_html: { class: 'centered'},input_html: { class: 'form-control url_box_md' } })  do |f| %>
 			<%#= f.simple_fields_for :products do |ff| %>
-				<%= f.input :url, placeholder: 'Paste here another link to an Amazon product' %>
+				<%= f.input :url, label: 'Add another Amazon link: to your CRUNCHm', placeholder: 'Paste here another link to an Amazon product' %>
 				<%#= f.input :products_hash, as: :hidden, input_html: {value: @crunchm} %> 
-			<%= f.button :submit, value: 'Crunchm' %>
+			<%= f.button :submit, value: 'Crunchm', class: 'btn btn-warning btn-lg centered col-md-4' %>
 		<% end %>
 	
 	<!-- Display comparison results -->
@@ -28,23 +28,39 @@
 
 		<% @crunchm[:tributes_all_hash].each do |tribute, stats| %>
 			<% unless [:image, :price_data, :Title].include?(tribute) %>
-			<tr>
-				<td><%= tribute.to_s.titleize unless [:image, :price_data, :Title].include?(tribute)%><p class='slider'><%= stats[:weight] %></p><p><%#= stats[:placement]%></p></td>
-			<% @crunchm.each do |asin,values| #unless asin is the hash of attributes named tributes_all_hash %>
-				<% unless asin == :tributes_all_hash   %>
-					<% if values.has_key?(tribute.to_s) && [:image, :price_data, :Title].exclude?(tribute) && values[tribute.to_s][:value] != '0.0'%>
-						<td><span><%= values[tribute.to_s][:value] %></span><p class="slider"><%= values[tribute.to_s][:score] %></p></td>
-					<% elsif tribute == :image %>					
-						<td><img src= <%#= values[tribute.to_s][:value] %>></td>
-					<% elsif values.has_key?(tribute.to_s) && values[tribute.to_s][:value] == '0.0' %>
-						<td>N/A</td>										
-					<% else %>
-						<td>--</td>
+				<tr>
+	<<<<<<< HEAD
+	=======
+					<td><%= tribute.to_s.titleize unless [:image, :price_data].include?(tribute)  %>
+						<p class='slider'><%= stats[:weight] %></p><p><%= stats[:placement]%></p>
+					</td>
+					<% @crunchm.each do |asin,values| #unless asin is the hash of attributes named tributes_all_hash %>
+						<% unless asin == :tributes_all_hash   %>
+						<% if values.has_key?(tribute.to_s) && [:image, :price_data].exclude?(tribute) && values[tribute.to_s][:value] != '0.0'%>
+							<% if tribute == :Feature %>
+								<td><ul>
+									<% values[tribute.to_s][:value][2..-3].split('","').each do |feature|%>
+									<li><%= feature %></li>
+									<% end %>
+								  </ul>
+								<p class="slider"><%= values[tribute.to_s][:score] %></p>
+								</td>	
+							<% else %>		
+								<td><%= values[tribute.to_s][:value] %>	
+									<p class="slider"><%= values[tribute.to_s][:score] %></p>
+								</td>
+							<% end %>
+						<% elsif tribute == :image %>					
+							<td><img src= <%#= values[tribute.to_s][:value] %>></td>
+						<% elsif values.has_key?(tribute.to_s) && values[tribute.to_s][:value] == '0.0' %>
+							<td>N/A</td>										
+						<% else %>
+							<td>--</td>
+						<% end %>
 					<% end %>
 				<% end %>
+				</tr>
 			<% end %>
-			</tr>
-		<% end %>
 		<% end %>
 		</tbody>
 	</table>

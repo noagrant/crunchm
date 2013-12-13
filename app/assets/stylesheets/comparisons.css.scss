@@ -3,9 +3,11 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 $navbar-default-bg: #A1C5C9;
+$navbar-default-color: #fff;
 @import 'bootstrap';
 
-.slider {max-width:100px; height:2px; text-align: center}
+
+//.slider {max-width:100px; height:2px; text-align: center}
 .th {max-width:200px;}
 
 td, th, p, span {max-width:200px; vertical-align: bottom}
@@ -14,12 +16,43 @@ th span {text-align: center;}
 td .slider { }
 
 
-
-
 .ui-widget-content {height:2px;}
-td .slider .ui-slider {background: #f7fa96;}
-td .slider .ui-slider-range {background: #f7fa96; height:2px;}
-td .slider .ui-state-default {background: #f8fa96;}
 
 
+.slider {
+	width:150px;
+	position: absolute;
+	bottom: 1px;
+}
+
+.scroll_down{
+	margin-top: 600px;
+}
+
+.centered{
+	text-align: center;
+	margin-left: 33.33%;
+}
+
+
+.url_box {
+	margin-top: 30px;
+}
+.url_box_md {
+	width: 90%;
+	margin-left: 5%;
+	margin-top: 5px;
+}
+td{
+	position: relative;
+}
+
+.logo{
+	height: 25px;
+	width: auto;
+}
+
+td .slider .ui-slider {background: #F0AD4E}
+td .slider .ui-slider-range {background: #F0AD4E}
+td .slider .ui-state-default {background: #fff}
 

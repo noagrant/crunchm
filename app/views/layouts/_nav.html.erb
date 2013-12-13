@@ -9,24 +9,24 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="#">CRUNCHM</a>
+    <a class="navbar-brand" href="#">CRUNCHm</a>
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
-      <li class="active"><a href="#">Link</a></li>
-      <li><a href="#">Link</a></li>
+      <li class="active"><%= link_to 'Start a new CRUNCHm', new_comparison_path %></li>
+      <!-- <li><a href="#">Link</a></li> -->
       <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
         <ul class="dropdown-menu">
-          <li><a href="#">Action</a></li>
-          <li><a href="#">Another action</a></li>
-          <li><a href="#">Something else here</a></li>
+          <li><a href="#">How to use CRUNCHm</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Investors</a></li>
           <li class="divider"></li>
-          <li><a href="#">Separated link</a></li>
-          <li class="divider"></li>
-          <li><a href="#">One more separated link</a></li>
+          <!-- <li><a href="#">Separated link</a></li> -->
+          <!-- <li class="divider"></li> -->
+          <li><a href="#">Join our team</a></li>
         </ul>
       </li>
     </ul>
@@ -38,7 +38,7 @@
       <button type="submit" class="btn btn-default">Save</button>
     </form>
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="#">Link</a></li>
+      <li><a href="http://www.amazon.com" target="_blank" ><%= image_tag "amazon_logo.png", class: 'logo' %></a></li>
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sort By <b class="caret"></b></a>
         <ul class="dropdown-menu">
