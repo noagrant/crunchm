@@ -28,9 +28,6 @@ class ProductsController < ApplicationController
 
 		#!!!!!!!!!!!!!!! note: we need to change this to if parsed, not if saved
 		# if @comparison.update
-			puts '*******************************************'
-			puts params
-
 				url_new = params[:product][:url]		
 				puts 'the new url is:::::::::::::::::::::::::::::::::::::::::::::::::'
 				puts url_new
