@@ -188,11 +188,15 @@ module ComparisonsHelper
 				price: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]["FormattedPrice"],
 				# price_data: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]["Amount"]
 			}
-		else
+		elsif item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["Price"]["FormattedPrice"]
 			price_hash = {
 				price: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["Price"]["FormattedPrice"],
 				# price_data: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["Price"]["Amount"]
 			}
+		else
+			price_hash = {
+				price: 'oops... unavailable'
+			}	
 		end
 		
 			price_hash.each do |key, value|
@@ -279,10 +283,12 @@ module ComparisonsHelper
 
 		# score for price
 		comparison.tributes.where(name: 'price').each do |tribute |
-			if tribute.value[1..-1].to_f == lowest_price
+			if tribute.value[1..-1].to_f === lowest_price
 				tribute.score = 1
-			else
+			elsif !lowest_price.nil? && !tribute.value.nil?
 				tribute.score = lowest_price / (tribute.value[1..-1].to_f)
+			else
+				tribute.score = 0
 			end
 		end
 

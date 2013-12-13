@@ -1,17 +1,18 @@
-<div class="row">
-	<div class="col-md-6 offset3">	
-		<%= simple_form_for(@comparison, defaults: { wrapper_html: {class: 'form-group'}, input_html: { class: 'form-control' } })  do |f| %>
+<!-- <div class="row">
+	<div class="col-md-6 offset3">	 -->
+		<%= simple_form_for(@comparison, defaults: { wrapper_html: {class: 'form-group'}, label_html: { class: 'url_box centered'},input_html: { class: 'form-control url_box' } })  do |f| %>
 		<!-- <div class="form-group"> -->
 			<%= f.simple_fields_for :products do |ff| %>
-				<%= ff.input :url,  input_html: {value: 'http://www.amazon.com/Samsung-Galaxy-Tab-7-Inch-White/dp/B00D02AGU4/ref=sr_1_2?s=electronics&ie=UTF8&qid=1386353560&sr=1-2&keywords=tablet'} %>
+				<%= ff.input :url, label: 'Paste a link to an Amazon product you want to compare:' , input_html: {value: 'http://www.amazon.com/Samsung-Galaxy-Tab-7-Inch-White/dp/B00D02AGU4/ref=sr_1_2?s=electronics&ie=UTF8&qid=1386353560&sr=1-2&keywords=tablet'} %>
 			<% end %>
-			<%= f.button :submit, value: 'Crunchm' %>
+			<%= f.button :submit, value: 'CRUNCHm', class: 'btn btn-warning btn-lg centered col-md-4'  %>
 		<%#= f.input :url, label: 'Enter a link to a product to compare', input_html: { class: 'input-xlarge' }  %>
 		<!-- </div> -->
 		<% end %>
-	</div>
-</div>
+	<!-- </div>
+</div> -->
 <!-- URL1 = 'http://www.amazon.com/Samsung-Galaxy-Tab-7-Inch-White/dp/B00D02AGU4/ref=sr_1_2?s=electronics&ie=UTF8&qid=1386353560&sr=1-2&keywords=tablet' -->
+<div class = 'scroll_down'>	
 	<p>http://www.amazon.com/Google-Nexus-Tablet-7-Inch-Black/dp/B00DVFLJKQ/ref=sr_1_2?ie=UTF8&qid=1386612400&sr=8-2&keywords=7%22+tablet</p>
 
 	<p>http://www.amazon.com/White-Gold-Diamond-Wedding-carat/dp/B0026NBH8S/ref=sr_1_2?s=jewelry&ie=UTF8&qid=1386833123&sr=1-2</p>
@@ -21,3 +22,4 @@
 	<p>http://www.amazon.com/Omaha-Steaks-12-oz-Burgers/dp/B001710KLA/ref=sr_1_1?s=grocery&ie=UTF8&qid=1386878398&sr=1-1&keywords=hamburger+omaha</p>
 
 	<p>http://www.amazon.com/Omaha-Steaks-tray-Lovers-Lasagna/dp/B001TQKFBS/ref=pd_bxgy_gro_img_z</p>
+</div>	
