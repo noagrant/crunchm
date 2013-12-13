@@ -122,6 +122,7 @@ class ComparisonsController < ApplicationController
 		@crunchm = create_table_hash(@comparison)
 		puts 'looks like it fails right here 888888888888888888888888888'
 		@products = current_comparison.products.all
+		
 	end
 
 	#process edits, recalculates winner

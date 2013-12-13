@@ -4,7 +4,7 @@
 			<%#= f.simple_fields_for :products do |ff| %>
 				<%= f.input :url, label: 'Add another Amazon link: to your CRUNCHm', placeholder: 'Paste here another link to an Amazon product' %>
 				<%#= f.input :products_hash, as: :hidden, input_html: {value: @crunchm} %> 
-			<%= f.button :submit, value: 'Crunchm', class: 'btn btn-warning btn-lg centered col-md-4' %>
+			<%= f.button :submit, value: 'CRUNCHm', class: 'btn btn-warning btn-lg centered col-md-4 crunch_font' %>
 		<% end %>
 	<p>
   
@@ -22,9 +22,10 @@
 					<% unless asin == :tributes_all_hash   %>
 						<th class='th'>
 							<% if asin.to_s == sorted.last.tributes.first.asin %>
-								<p>WINNER</p>
-							<% end %> 
+								<p>>WINNER</p>
+							<% end %>						 
 							<img src= <%= values['image'][:value] %>>
+							<p class="glyph_p"><span class='glyphicon glyphicon-shopping-cart glyph_margin'><%#= link_to '#', destroy_product_path, method: 'delete', class: 'icon' %></span><span class='glyphicon glyphicon-share glyph_margin'></span><span class='glyphicon glyphicon-trash glyph_margin'></span></p>
 						</th>
 					<% end %>
 				<% end %>
@@ -49,8 +50,8 @@
 		<% @crunchm[:tributes_all_hash].each do |tribute, stats| %>
 			<% unless [:image, :price_data, :Title].include?(tribute) %>
 				<tr>
-					<td class='td'><%= tribute.to_s.titleize unless [:image, :price_data].include?(tribute)  %>
-						<div class='slider-container'><p class='slider'></p><p class='weight-value'><%= stats[:weight] %></p></div><p><%#= stats[:placement]%></p>
+					<td class='td tribute-column'><%= tribute.to_s.titleize unless [:image, :price_data].include?(tribute)  %>
+						<div class='slider-container slider-tribute'><p class='slider'></p><!--<p class='weight-value'><%#= stats[:weight] %></p>--></div>
 					</td>
 					<% @crunchm.each do |asin,values| #unless asin is the hash of attributes named tributes_all_hash %>
 						<% unless asin == :tributes_all_hash   %>

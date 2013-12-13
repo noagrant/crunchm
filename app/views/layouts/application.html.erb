@@ -72,12 +72,22 @@
           $(".slider").hide();
 
            $(document).on('mouseenter','.td',function(){
-              $(this).find('.slider').fadeIn(300);
+              $(this).find('.slider').fadeIn(100);
            });
 
             $(document).on('mouseleave','.td',function(){
-              $(this).find('.slider').fadeOut(300);
+              $(this).find('.slider').fadeOut(100);
            });
+
+            $(".glyphicon").hide();
+
+            $(document).on('mouseenter','.th',function(){
+              $(this).find('.glyphicon').fadeIn(100);
+            });
+
+            $(document).on('mouseleave','.th',function(){
+              $(this).find('.glyphicon').fadeOut(100);
+            });
 
         });
 

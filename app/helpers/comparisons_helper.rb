@@ -25,7 +25,7 @@ module ComparisonsHelper
 		HardwarePlatform: [1,1,11],
 		Genre: [1,2,28],
 		IsAutographed: [10,1,23],
-		ItemDimensions: [1,1,12],
+		Dimensions: [1,1,12],
 		Languages: [1,2,29],
 		price: [100,1,2],
 		Manufacturer: [1,3,45],
@@ -181,6 +181,46 @@ module ComparisonsHelper
 		tributes_vacuum_hash = item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]
 		
 		img = item_attributes["ItemLookupResponse"]["Items"]["Item"]["MediumImage"]["URL"]
+
+		if dimensions = item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]["ItemDimensions"]
+			h = (dimensions["Height"]["__content__"].to_i) / 100
+			l = (dimensions["Length"]["__content__"].to_i) / 100
+			w = (dimensions["Width"]["__content__"].to_i) / 100
+			if dimensions["Weight"]
+				lb = ((dimensions["Weight"]["__content__"].to_i) / 100)
+				lbs = 'lbs'
+			else
+				lb = 'N/A'
+				lbs = ''
+			end
+			puts h, lb
+			puts h.class
+
+
+			dimensions = "W: #{w} in x L: #{l} in x H: #{h} in; Weight: #{lb} #{lbs}"
+
+			puts dimensions
+			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+			
+			tribute = Tribute.create(name: :Dimensions,
+					value: dimensions,
+					weight: TRIBUTES_ALLOWED[:Dimensions][0],
+					score: SCORE_DEFAULT,
+					group: TRIBUTES_ALLOWED[:Dimensions][1],
+					placement: TRIBUTES_ALLOWED[:Dimensions][2],
+					asin: asin)
+			product.tributes.push(tribute)
+			comp.tributes.push(tribute)	 
+		end
+
+# {"Height"=>{"__content__"=>"712", "Units"=>"hundredths-inches"}, "Length"=>{"__content__"=>"1150", "Units"=>"hundredths-inches"}, "Weight"=>{"__content__"=>"800", "Units"=>"hundredths-pounds"}, "Width"=>{"__content__"=>"1350", "Units"=>"hundredths-inches"}}
+
 
 		# sale price is Amazon discounted price, but it is not always available
 		if item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]
@@ -342,8 +382,8 @@ module ComparisonsHelper
 			# puts x.weight
 			# puts x.placement
 		# products = Product.where(comparison_id: params[:id]).order('ranking DESC')
-		products = current_comparison.products.order('ranking DESC')
-		puts pr
+		# products = current_comparison.products.order('ranking DESC')
+		
 		# A.each{|x| puts x.ranking} # this could be something
 
 
