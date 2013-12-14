@@ -22,7 +22,7 @@
 					<% unless asin == :tributes_all_hash   %>
 						<th class='th'>
 							<% if asin.to_s == sorted.last.tributes.first.asin %>
-								<p>>WINNER</p>
+								<p>WINNER</p>
 							<% end %>						 
 							<img src= <%= values['image'][:value] %>>
 							<p class="glyph_p"><span class='glyphicon glyphicon-shopping-cart glyph_margin'><%#= link_to '#', destroy_product_path, method: 'delete', class: 'icon' %></span><span class='glyphicon glyphicon-share glyph_margin'></span><span class='glyphicon glyphicon-trash glyph_margin'></span></p>

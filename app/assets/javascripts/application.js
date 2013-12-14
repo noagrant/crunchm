@@ -14,7 +14,6 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap
-//= require pakunok/jquery-ui/pack/draggable
 //= require_tree .
 
 
