@@ -1,7 +1,10 @@
 require 'open-uri'
 module ComparisonsHelper
+
+	#constants:
 	INSERTPOINT = '/dp/'
 	DELETEPOINT = '/ref='
+	URL_BEGIN = 'http://www.amazon.com/dp/'
 	TECHDATA = '/dp/tech-data/'
 	WEIGHT_DEFAULT = 1
 	SCORE_DEFAULT = 0.5
@@ -42,7 +45,8 @@ module ComparisonsHelper
 		SubscriptionLength: [1,2,37],
 		Title: [1,1,1],
 		Studio: [1,2,38],
-		Warranty: [1,2,39]
+		Warranty: [1,2,39],
+		Weight: [1,1,13]
 	}
 
 	TRIBUTES_DISALLOWED = [
@@ -69,7 +73,7 @@ module ComparisonsHelper
 
 	def parseAmazon(raw_link)
 		#parsed_array = raw_link.split(DELETEPOINT, 2)
-		user_url_splitted = raw_link.gsub('/gp/', INSERTPOINT).split(INSERTPOINT, 2 )
+		user_url_splitted = raw_link.gsub('/gp/', INSERTPOINT).gsub('/product',"").split(INSERTPOINT, 2 )
 		begin_url = user_url_splitted.first
 		@asin = user_url_splitted.last.to_s[0..9]
 		@parsed = [begin_url, TECHDATA, @asin].join("")
@@ -183,10 +187,10 @@ module ComparisonsHelper
 		img = item_attributes["ItemLookupResponse"]["Items"]["Item"]["MediumImage"]["URL"]
 
 		if dimensions = item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]["ItemDimensions"]
-			h = (dimensions["Height"]["__content__"].to_i) / 100
-			l = (dimensions["Length"]["__content__"].to_i) / 100
-			w = (dimensions["Width"]["__content__"].to_i) / 100
-			if dimensions["Weight"]
+			dimensions["Height"] ? h = (dimensions["Height"]["__content__"].to_i) / 100 : h="N/A"
+			dimensions["Length"] ? l = (dimensions["Length"]["__content__"].to_i) / 100 : l="N/A"
+			dimensions["Width"] ? w = (dimensions["Width"]["__content__"].to_i) / 100 : w = "N/A"
+			if dimensions["Weight"] 
 				lb = ((dimensions["Weight"]["__content__"].to_i) / 100)
 				lbs = 'lbs'
 			else
@@ -197,7 +201,7 @@ module ComparisonsHelper
 			puts h.class
 
 
-			dimensions = "W: #{w} in x L: #{l} in x H: #{h} in; Weight: #{lb} #{lbs}"
+			dimensions = "W: #{w} in x L: #{l} in x H: #{h} in"
 
 			puts dimensions
 			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
@@ -217,13 +221,24 @@ module ComparisonsHelper
 					asin: asin)
 			product.tributes.push(tribute)
 			comp.tributes.push(tribute)	 
+			
+			tribute = Tribute.create(name: :Weight,
+				value: "#{lb} #{lbs}",
+				weight: TRIBUTES_ALLOWED[:Weight][0],
+					score: SCORE_DEFAULT,
+					group: TRIBUTES_ALLOWED[:Weight][1],
+					placement: TRIBUTES_ALLOWED[:Weight][2],
+					asin: asin)
+			product.tributes.push(tribute)
+			comp.tributes.push(tribute)				
+
 		end
 
 # {"Height"=>{"__content__"=>"712", "Units"=>"hundredths-inches"}, "Length"=>{"__content__"=>"1150", "Units"=>"hundredths-inches"}, "Weight"=>{"__content__"=>"800", "Units"=>"hundredths-pounds"}, "Width"=>{"__content__"=>"1350", "Units"=>"hundredths-inches"}}
 
 
 		# sale price is Amazon discounted price, but it is not always available
-		if item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]
+		if item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"] 
 			price_hash = {
 				price: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]["FormattedPrice"],
 				# price_data: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]["Amount"]
