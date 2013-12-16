@@ -186,6 +186,7 @@ module ComparisonsHelper
 			h = (dimensions["Height"]["__content__"].to_i) / 100
 			l = (dimensions["Length"]["__content__"].to_i) / 100
 			w = (dimensions["Width"]["__content__"].to_i) / 100
+
 			if dimensions["Weight"]
 				lb = ((dimensions["Weight"]["__content__"].to_i) / 100)
 				lbs = 'lbs'
@@ -220,15 +221,16 @@ module ComparisonsHelper
 		end
 
 # {"Height"=>{"__content__"=>"712", "Units"=>"hundredths-inches"}, "Length"=>{"__content__"=>"1150", "Units"=>"hundredths-inches"}, "Weight"=>{"__content__"=>"800", "Units"=>"hundredths-pounds"}, "Width"=>{"__content__"=>"1350", "Units"=>"hundredths-inches"}}
-
-
+		puts "item attributes hash is here &&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+		puts item_attributes
 		# sale price is Amazon discounted price, but it is not always available
-		if item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]
+		if item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"] && item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]
+			puts 'does it get here? ******************************'
 			price_hash = {
 				price: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]["FormattedPrice"],
 				# price_data: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]["Amount"]
 			}
-		elsif item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["Price"]["FormattedPrice"]
+		elsif item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"] && item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["Price"]["FormattedPrice"]
 			price_hash = {
 				price: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["Price"]["FormattedPrice"],
 				# price_data: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["Price"]["Amount"]
@@ -239,17 +241,17 @@ module ComparisonsHelper
 			}	
 		end
 		
-			price_hash.each do |key, value|
-				tribute = Tribute.create(name: 	key,
-					value: value,
-					weight: TRIBUTES_ALLOWED[key.to_sym][0],
-					score: SCORE_DEFAULT,
-					group: TRIBUTES_ALLOWED[key.to_sym][1],
-					placement: TRIBUTES_ALLOWED[key.to_sym][2],
-					asin: asin)
-				product.tributes.push(tribute)
-				comp.tributes.push(tribute)		
-						end
+		price_hash.each do |key, value|
+			tribute = Tribute.create(name: 	key,
+				value: value,
+				weight: TRIBUTES_ALLOWED[key.to_sym][0],
+				score: SCORE_DEFAULT,
+				group: TRIBUTES_ALLOWED[key.to_sym][1],
+				placement: TRIBUTES_ALLOWED[key.to_sym][2],
+				asin: asin)
+			product.tributes.push(tribute)
+			comp.tributes.push(tribute)		
+		end
 
 
 		tribute = Tribute.create(name: "image", value: img, asin: asin )
@@ -375,10 +377,25 @@ module ComparisonsHelper
 	def create_table_hash(comparison)
 
 		t = comparison.tributes.group("name").order("placement")
+		puts ' &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+
 		tributes_all_hash = Hash.new
 		t.each do |x|
 			tributes_all_hash[x.name.to_sym] = {weight: x.weight, placement: x.placement, group: x.group}
-			# puts x.name
+			
+			if TRIBUTES_ALLOWED.has_key?(x.name.to_sym)
+				puts "tribute name will go below"
+				puts TRIBUTES_ALLOWED[x.name.to_sym][0]
+
+					shared_tributes = SharedTribute.create(
+															name: x.name.to_sym,
+															weight: TRIBUTES_ALLOWED[x.name.to_sym][0],
+														)
+					
+				comparison.shared_tributes.push(shared_tributes)
+			end
+			
+			
 			# puts x.weight
 			# puts x.placement
 		# products = Product.where(comparison_id: params[:id]).order('ranking DESC')
@@ -391,8 +408,8 @@ module ComparisonsHelper
 		asin_hash = comparison.tributes.group('asin')
 		products_hash = Hash.new
 		
-		puts ' &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-		puts params[:id]
+		# puts ' &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+		# puts params[:id]
 		asin_hash.each do |t|
 			
 			
