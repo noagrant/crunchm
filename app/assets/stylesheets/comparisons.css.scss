@@ -17,11 +17,15 @@ $navbar-default-color: #fff;
 
 .th {max-width:200px;}
 
-td, th, p, span {max-width:200px; 
-					vertical-align: bottom;
-					text-align: center;}
+td, th, p, span {
+	max-width:200px; 
+	vertical-align: bottom;
+	text-align: center;
+}
 
-.td li {text-align:left;}
+.td li {
+	text-align:left;
+}
 
 td{
 	position: relative;
@@ -33,19 +37,31 @@ td{
 }
 
 
-th span, th p {text-align: center; 
-			margin: 0 auto;}
+th p {
+	text-align: center; 
+	margin: 0 auto;
+}
 
-.th {border: none; text-align:center;}
-// #noborder {border-top: none; border-color:white;}
+th span {
+	text-align: center; 
+	margin: 0 auto;
+}
 
+.th {
+	border: none; 
+	text-align:center;
+}
 
-.ui-widget-content {height:2px;}
+.ui-widget-content {
+	height:2px;
+}
 
-.slider-container {width:160px; 
-					height:15px;
-					margin: 0 auto;
-					padding-top:5px}
+.slider-container {
+	width:160px; 
+	height:15px;
+	margin: 0 auto;
+	padding-top:5px
+}
 
 .slider {
 	width:150px;
@@ -67,16 +83,15 @@ th span, th p {text-align: center;
 	margin-left: 33.33%;
 }
 
-
 .url_box {
 	margin-top: 30px;
 }
+
 .url_box_md {
 	width: 90%;
 	margin-left: 5%;
 	margin-top: 5px;
 }
-
 
 .logo{
 	height: 25px;

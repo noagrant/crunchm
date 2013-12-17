@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131213005624) do
+ActiveRecord::Schema.define(version: 20131216065451) do
 
   create_table "comparisons", force: true do |t|
     t.string   "name"
@@ -33,6 +33,16 @@ ActiveRecord::Schema.define(version: 20131213005624) do
   end
 
   add_index "products", ["comparison_id"], name: "index_products_on_comparison_id"
+
+  create_table "shared_tributes", force: true do |t|
+    t.string   "name"
+    t.float    "weight"
+    t.integer  "comparison_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "shared_tributes", ["comparison_id"], name: "index_shared_tributes_on_comparison_id"
 
   create_table "tributes", force: true do |t|
     t.string   "name"

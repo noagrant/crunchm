@@ -4,7 +4,7 @@
 			<%#= f.simple_fields_for :products do |ff| %>
 				<%= f.input :url, label: 'Add another Amazon link: to your CRUNCHm', placeholder: 'Paste here another link to an Amazon product' %>
 				<%#= f.input :products_hash, as: :hidden, input_html: {value: @crunchm} %> 
-			<%= f.button :submit, value: 'CRUNCHm', class: 'btn btn-warning btn-lg centered col-md-4 crunch_font' %>
+			<%= f.button :submit, value: 'Crunchm', class: 'btn btn-warning btn-lg centered col-md-4' %>
 		<% end %>
 	<p>
   
@@ -25,7 +25,7 @@
 								<p>WINNER</p>
 							<% end %>						 
 							<img src= <%= values['image'][:value] %>>
-							<p class="glyph_p"><span class='glyphicon glyphicon-shopping-cart glyph_margin'><%#= link_to '#', destroy_product_path, method: 'delete', class: 'icon' %></span><span class='glyphicon glyphicon-share glyph_margin'></span><span class='glyphicon glyphicon-trash glyph_margin'></span></p>
+							<p class='glyph_p'><span class='glyphicon glyphicon-shopping-cart glyph glyph_margin'><%#= link_to '#', destroy_product_path, method: 'delete', class: 'icon' %></span><span class='glyphicon glyphicon-share glyph_margin'></span><span class='glyphicon glyphicon-trash glyph_margin'></span></p>
 						</th>
 					<% end %>
 				<% end %>
@@ -84,10 +84,18 @@
 		<% end %>
 		</tbody>
 	</table>
-
+<div style='height:500px; margin-top:500px'><div>
 	
-	<p>http://www.amazon.com/Samsung-Galaxy-Tab-7-Inch-Gold-Brown/dp/B00D02AG7C/ref=sr_1_3?s=electronics&ie=UTF8&qid=1386449781&sr=1-3&keywords=tablet+samsung</p>
+	<div>http://www.amazon.com/Samsung-Galaxy-Tab-7-Inch-Gold-Brown/dp/B00D02AG7C/ref=sr_1_3?s=electronics&ie=UTF8&qid=1386449781&sr=1-3&keywords=tablet+samsung</div>
 
-	<p>http://www.amazon.com/Sony-Xperia-SGP311U1-10-1-Inch-Tablet/dp/B00CE590Z0/ref=sr_1_1?s=electronics&ie=UTF8&qid=1386450305&sr=1-1&keywords=tablet+sony</p>
+	<div>http://www.amazon.com/Sony-Xperia-SGP311U1-10-1-Inch-Tablet/dp/B00CE590Z0/ref=sr_1_1?s=electronics&ie=UTF8&qid=1386450305&sr=1-1&keywords=tablet+sony</div>
+
+	<div>http://www.amazon.com/Samsung-Galaxy-Smartwatch--Retail-Packaging/dp/B00FH9I0FQ/ref=sr_1_1?s=electronics&ie=UTF8&qid=1386967578&sr=1-1&keywords=samsung+galaxy+watch</div>
+
+	<div>http://www.amazon.com/Pebble-Smart-iPhone-Android-Devices/dp/B00EULMBZC/ref=sr_1_2?s=electronics&ie=UTF8&qid=1386967613&sr=1-2&keywords=pebble+watch</div>
+
+	<div>http://www.amazon.com/Leica-X1-12-2MP-Digital-Camera/dp/B002NX13QC/ref=sr_1_2?s=electronics&ie=UTF8&qid=1386967739&sr=1-2&keywords=nikon+cameras</div>
+
+	<div>http://www.amazon.com/Hamburger-Cheeseburger-Burger-Phone-Telephone/dp/B0016CVUR8/ref=sr_1_1?s=electronics&ie=UTF8&qid=1386967789&sr=1-1&keywords=hamburger+phone</div>
 
 </div>
