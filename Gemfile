@@ -3,8 +3,10 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.1'
 
+gem 'pg'
+
 group :development do
-	gem 'sqlite3'
+	# gem 'sqlite3'
 	gem 'rails-footnotes'
 end
 
@@ -43,4 +45,5 @@ gem 'simple_form', '~> 3.0.0'
 # gem 'rails_bootstrap_navbar'
 gem 'nokogiri', '~> 1.6.0', :require => "nokogiri"
 gem "vacuum", "~> 1.0.0"
+gem 'taps'
 # gem 'pakunok'
