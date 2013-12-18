@@ -52,6 +52,12 @@ class ProductsController < ApplicationController
 
 	# delete this product from the table
 	def destroy
+		@product = Product.find(params[:product_id])
+		@product.destroy
+
+		respond_to do |format|
+			format.html { redirect_to(edit_comparison_path)}
+			format.js	{ render nothing: true }
 	end	
 
 

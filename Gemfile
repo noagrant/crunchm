@@ -1,12 +1,31 @@
 source 'https://rubygems.org'
-
+ruby '1.9.3'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.1'
 
 group :development do
-	gem 'sqlite3'
+	#gem 'sqlite3'
 	gem 'rails-footnotes'
 end
+gem 'sqlite3'
+#group :test do
+# 	gem 'tap'
+# 	postgres gem for Rails to allow db migration to heroku
+# 	note: if bundle install fails, run the following line before bundle install: 
+#	bundle config build.pg --with-pg-config=/usr/pgsql-9.1/bin/pg_config
+#	gem 'pg'
+#end	
+# group :production do
+#   gem 'pg', '0.15.1'
+#   gem 'rails_12factor', '0.0.2'
+# end
+
+# gem 'rb-read\-line', '~> 0.4.2'
+
+group :doc do
+  gem 'sdoc', '0.3.20', require: false
+end
+
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'

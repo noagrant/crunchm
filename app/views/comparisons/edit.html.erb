@@ -6,13 +6,8 @@
 				<%#= f.input :products_hash, as: :hidden, input_html: {value: @crunchm} %> 
 			<%= f.button :submit, value: 'Crunchm', class: 'btn btn-warning btn-lg centered col-md-4' %>
 		<% end %>
-	<p>
-  
-  <input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;">
-</p>
-
+	<p><input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;"></p>
 <% sorted = @comparison.products.order(:ranking) %>
-<%#= sorted.last.tributes.first.asin %> <!-- the highest ranking product -->
 	<!-- Display comparison results -->
 	<table class='table table-striped draggable'>
 		<thead>
@@ -20,12 +15,15 @@
 				<th></th>
 				<% @crunchm.each do |asin,values| #unless asin is the hash of attributes named tributes_all_hash %>
 					<% unless asin == :tributes_all_hash   %>
-						<th class='th'>
-							<% if asin.to_s == sorted.last.tributes.first.asin %>
+						<th class='th <%= asin %>'>
+							<% if asin.to_s == sorted.last.tributes.first.asin %><!-- the highest ranking product -->
 								<p>WINNER</p>
 							<% end %>						 
 							<img src= <%= values['image'][:value] %>>
-							<p class='glyph_p'><span class='glyphicon glyphicon-shopping-cart glyph glyph_margin'><%#= link_to '#', destroy_product_path, method: 'delete', class: 'icon' %></span><span class='glyphicon glyphicon-share glyph_margin'></span><span class='glyphicon glyphicon-trash glyph_margin'></span></p>
+							<p class='glyph_p <%= asin%>'>
+								<%= link_to raw('<span class: "glyphicon glyphicon-shopping-cart glyph glyph_margin"></span>'), @product, class: "glyphicon glyphicon-shopping-cart glyph glyph_margin" %>
+								<%= link_to raw('<span class: "glyphicon glyphicon-share glyph_margin"></span>'), @product, class: "glyphicon glyphicon-share glyph_margin" %>
+								<%= link_to raw('<span class: "glyphicon glyphicon-trash"></span>'), @product, :confirm => 'Are you sure?', :method => :delete, :remote=>true, :class=>'delete_product glyphicon glyphicon-trash glyph_margin' %></p>
 						</th>
 					<% end %>
 				<% end %>
@@ -34,15 +32,11 @@
 				<th></th>
 				<% @crunchm.each do |asin,values| #unless asin is the hash of attributes named tributes_all_hash %>
 					<% unless asin == :tributes_all_hash   %>
-						<th class='th' id='noborder'>
-						
-							<span><%= values['Title'][:value]%></span>
-							
+						<th class='th #{asin}'>					
+							<span><%= values['Title'][:value]%></span>							
 						</th>
-
 					<% end %>
 				<% end %>
-
 			</tr>
 		</thead>
 		<tbody>
@@ -57,7 +51,7 @@
 						<% unless asin == :tributes_all_hash   %>
 						<% if values.has_key?(tribute.to_s) && [:image, :price_data].exclude?(tribute) && values[tribute.to_s][:value] != '0.0'%>
 							<% if tribute == :Feature %>
-								<td class='td'><ul>
+								<td class='td <%= asin %>'><ul>
 									<% values[tribute.to_s][:value][2..-3].split('", "').each do |feature|%>
 									<li><%= feature %></li>
 									<% end %>
@@ -65,17 +59,17 @@
 								<div class='slider-container'><p class="slider"><%#= values[tribute.to_s][:score] %></p></div>
 								</td>	
 							<% else %>		
-								<td class='td'><%= values[tribute.to_s][:value] %>	
+								<td class='td <%= asin %>'><%= values[tribute.to_s][:value] %>	
 									<div class='slider-container'><p class="slider"><%#= values[tribute.to_s][:score] %></p></div>
 									<p></p>
 								</td>
 							<% end %>
 						<% elsif tribute == :image %>					
-							<td><img src= <%#= values[tribute.to_s][:value] %>></td>
+							<td class='<%= asin %>'><img src= <%#= values[tribute.to_s][:value] %>></td>
 						<% elsif values.has_key?(tribute.to_s) && values[tribute.to_s][:value] == '0.0' %>
-							<td>N/A</td>										
+							<td class='<%= asin %>'>N/A</td>										
 						<% else %>
-							<td>--</td>
+							<td class='<%= asin %>'>--</td>
 						<% end %>
 					<% end %>
 				<% end %>
@@ -84,7 +78,7 @@
 		<% end %>
 		</tbody>
 	</table>
-<div style='height:500px; margin-top:500px'><div>
+<div style='height:500px; margin-top:500px; width:800px;'><div>
 	
 	<div>http://www.amazon.com/Samsung-Galaxy-Tab-7-Inch-Gold-Brown/dp/B00D02AG7C/ref=sr_1_3?s=electronics&ie=UTF8&qid=1386449781&sr=1-3&keywords=tablet+samsung</div>
 
