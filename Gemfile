@@ -47,3 +47,6 @@ gem 'nokogiri', '~> 1.6.0', :require => "nokogiri"
 gem "vacuum", "~> 1.0.0"
 gem 'taps'
 # gem 'pakunok'
+group :production do
+  gem 'rails_12factor'
+end
