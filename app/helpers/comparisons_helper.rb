@@ -107,9 +107,10 @@ module ComparisonsHelper
 								group: 1,
 								placement: 0,
 								asin: asin)
-		product.tributes.push(tribute) 
+		product.tributes.push(tribute)
+		product.update(asin: asin)  
 		comp.tributes.push(tribute)
-	# puts technical_detail.css("#technical-data .bucket .content li")
+		# puts technical_detail.css("#technical-data .bucket .content li")
 		technical_detail.css("#technical-data .bucket .content li").each do |r| 
 		#  r.class # is a Nokogiri::XML::Element
 		#  technical_detail.class  # is a Nokogiri::HTML::Document
