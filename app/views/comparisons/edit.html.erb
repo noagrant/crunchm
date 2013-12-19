@@ -21,9 +21,10 @@
 							<% end %>						 
 							<img src= <%= values['image'][:value] %>>
 							<p class='glyph_p <%= asin%>'>
+								<% @product = Product.find_by asin: asin %>
 								<%= link_to raw('<span class: "glyphicon glyphicon-shopping-cart glyph glyph_margin""></span>'), @product, class: "glyphicon glyphicon-shopping-cart glyph glyph_margin" %>
 								<%= link_to raw('<span class: "glyphicon glyphicon-share glyph_margin"></span>'), @product, class: "glyphicon glyphicon-share glyph_margin" %>
-								<%= link_to raw('<span class: "glyphicon glyphicon-trash"></span>'), product_path, :confirm => 'Are you sure?', :method => :delete, :remote=>true, :class=>'delete_product glyphicon glyphicon-trash glyph_margin' %></p>
+								<%= link_to raw('<span class: "glyphicon glyphicon-trash"></span>'), @product, :confirm => 'Are you sure?', :method => :delete, :remote=>true, :class=>'delete_product glyphicon glyphicon-trash glyph_margin' %></p>
 						</th>
 					<% end %>
 				<% end %>
