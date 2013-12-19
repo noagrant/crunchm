@@ -18,7 +18,7 @@
 
 // hide column that was deleted by user using ajax
 $('.delete_product').bind('ajax:success', function(){
-  $(this).find('td.<%= asin %>').fadeout;
+  $(this).find('td.<%= asin %>').fadeout();
 });
 
 

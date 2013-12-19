@@ -64,13 +64,11 @@ class ComparisonsController < ApplicationController
 				# because this returns the numerical key as a string instead of a key and "flattens" the hash
 				# we loop to access the actual hash that has the url value.
 				puts 'showing the session a below 888888888888888888888888888888888888888888888888'
-			puts a
+				puts a
 				a.each do |b|
 					if b.is_a? Hash
-
 						puts 'showing the session b below 888888888888888888888888888888888888888888888888'
-			puts b
-
+						puts b
 						# so b here is {:url => "google.com"} for instance.
 						# we push because @comparison.products is an array
 						@product = Product.create(url: b[:url])
@@ -101,28 +99,23 @@ class ComparisonsController < ApplicationController
 				# because this returns the numerical key as a string instead of a key and "flattens" the hash
 				# we loop to access the actual hash that has the url value.
 				puts 'showing the session a below 888888888888888888888888888888888888888888888888'
-			puts a
+				puts a
 				a.each do |b|
 					if b.is_a? Hash
-
 						puts 'showing the session b below 888888888888888888888888888888888888888888888888'
-			puts b
+						puts b
 						@product = Product.new(url: b[:url])
 						# so b here is {:url => "google.com"} for instance.
-						# we push because @comparison.products is an array
-						
+						# we push because @comparison.products is an array						
 					end
 				end
 			end
-
-
 		end	
 		# @product = Product.new(url: 'just a placeholder for now')
 		puts 'looks like it fails right here 888888888888888888888888888'
 		@crunchm = create_table_hash(@comparison)
 		puts 'looks like it fails right here 888888888888888888888888888'
-		@products = current_comparison.products.all
-		
+		@products = current_comparison.products.all		
 	end
 
 	#process edits, recalculates winner

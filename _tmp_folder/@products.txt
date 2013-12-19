@@ -1,0 +1,21 @@
+@products	
+  [
+	#<
+		Product id: 86, 
+		name: nil, 
+		url: "http://www.amazon.com/PocketWizard-PlusX-Wireless-R...", 
+		comparison_id: 14, 
+		created_at: "2013-12-18 22:25:22", 
+		updated_at: "2013-12-18 22:25:26", 
+		ranking: 115.0
+	>, 
+	#<
+	Product id: 87, 
+	name: nil, 
+	url: "http://www.amazon.com/PocketWizard-801-130-Plus-III...", 
+	comparison_id: 14, 
+	created_at: "2013-12-18 22:25:24", 
+	updated_at: "2013-12-18 22:25:26", 
+	ranking: nil
+	>
+  ]
