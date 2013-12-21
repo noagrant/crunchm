@@ -60,6 +60,13 @@ gem "bootstrap-sass", '~> 3.0.3.0'
 # gem "bootstrap-sass", "~> 3.0.2.1"
 gem 'simple_form', '~> 3.0.0'
 # gem 'rails_bootstrap_navbar'
+
+# nokogiri crowls the amazon page and vacuum gets info from Amazon API
 gem 'nokogiri', '~> 1.6.0', :require => "nokogiri"
 gem "vacuum", "~> 1.0.0"
+
 # gem 'pakunok'
+
+# gon allows sending data to js. requires <% include_gon %> in layout head 
+gem 'gon'
+
