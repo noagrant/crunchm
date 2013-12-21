@@ -2,29 +2,32 @@
 	<!-- search box to add another product to compare -->
 	<%= simple_form_for(@product, url: comparison_products_path(@comparison), action: :create, method: :post, defaults: { wrapper_html: {class: 'form-group'}, label_html: { class: 'centered'},input_html: { class: 'form-control url_box_md' } })  do |f| %>
 			<%#= f.simple_fields_for :products do |ff| %>
-				<%= f.input :url, label: 'Add another Amazon link: to your CRUNCHm', placeholder: 'Paste here another link to an Amazon product' %>
+				<%= f.input :url, label: 'Add another Amazon link to your CRUNCHm', placeholder: 'Paste here another link to an Amazon product' %>
 				<%#= f.input :products_hash, as: :hidden, input_html: {value: @crunchm} %> 
 			<%= f.button :submit, value: 'Crunchm', class: 'btn btn-warning btn-lg centered col-md-4' %>
 		<% end %>
-	<p><input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;"></p>
-<% sorted = @comparison.products.order(:ranking) %>
+	<!-- <p><input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;"></p> -->
+	<% sorted = @comparison.products.order(:ranking) %>
 	<!-- Display comparison results -->
 	<table class='table table-striped draggable'>
 		<thead>
 			<tr>
 				<th></th>
 				<% @crunchm.each do |asin,values| #unless asin is the hash of attributes named tributes_all_hash %>
-					<% unless asin == :tributes_all_hash   %>
+					<% unless asin == :tributes_all_hash   %> <!-- because we're storing both the attributes table and the products in @crunchm -->
+						<%# gon.product_asin = asin %>
 						<th class='th <%= asin %>'>
 							<% if asin.to_s == sorted.last.tributes.first.asin %><!-- the highest ranking product -->
 								<p>WINNER</p>
 							<% end %>						 
 							<img src= <%= values['image'][:value] %>>
-							<p class='glyph_p <%= asin%>'>
-								<% @product = Product.find_by asin: asin %>
-								<%= link_to raw('<span class: "glyphicon glyphicon-shopping-cart glyph glyph_margin""></span>'), @product, class: "glyphicon glyphicon-shopping-cart glyph glyph_margin" %>
-								<%= link_to raw('<span class: "glyphicon glyphicon-share glyph_margin"></span>'), @product, class: "glyphicon glyphicon-share glyph_margin" %>
-								<%= link_to raw('<span class: "glyphicon glyphicon-trash"></span>'), @product, :confirm => 'Are you sure?', :method => :delete, :remote=>true, :class=>'delete_product glyphicon glyphicon-trash glyph_margin' %></p>
+							<%# content_tag 'div', id:  'glyphicon_call', data: { productAsin: asin } do %> <!-- this passes the asin to jquery -->
+								<p class='glyph_p' >
+									<% @product = Product.find_by asin: asin %>
+									<%= link_to raw('<span class: "glyphicon glyphicon-shopping-cart glyph glyph_margin""></span>'), @product, class: "glyphicon glyphicon-shopping-cart glyph glyph_margin" %>
+									<%= link_to raw('<span class: "glyphicon glyphicon-share glyph_margin"></span>'), @product, class: "glyphicon glyphicon-share glyph_margin" %>
+									<%= link_to raw('<span class: "glyphicon glyphicon-trash"></span>'), @product, :confirm => 'Are you sure?', :method => :delete, :remote=>true, :class=>'delete_product glyphicon glyphicon-trash glyph_margin', data: { asin: asin } %></p>
+							<%# end %> <!-- ends content tag -->
 						</th>
 					<% end %>
 				<% end %>
@@ -33,7 +36,7 @@
 				<th></th>
 				<% @crunchm.each do |asin,values| #unless asin is the hash of attributes named tributes_all_hash %>
 					<% unless asin == :tributes_all_hash   %>
-						<th class='th #{asin}'>					
+						<th class='th <%= asin %>'>					
 							<span><%= values['Title'][:value]%></span>							
 						</th>
 					<% end %>
