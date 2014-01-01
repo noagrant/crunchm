@@ -66,6 +66,7 @@ GEM
     multi_xml (0.5.5)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
+    pg (0.15.1)
     polyglot (0.3.3)
     rack (1.5.2)
     rack-test (0.6.2)
@@ -80,6 +81,11 @@ GEM
       sprockets-rails (~> 2.0.0)
     rails-footnotes (3.7.9)
       rails (>= 3.0.0)
+    rails_12factor (0.0.2)
+      rails_serve_static_assets
+      rails_stdout_logging
+    rails_serve_static_assets (0.0.2)
+    rails_stdout_logging (0.0.3)
     railties (4.0.1)
       actionpack (= 4.0.1)
       activesupport (= 4.0.1)
@@ -138,8 +144,10 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   nokogiri (~> 1.6.0)
+  pg (= 0.15.1)
   rails (= 4.0.1)
   rails-footnotes
+  rails_12factor (= 0.0.2)
   sass-rails (~> 4.0.0)
   sdoc (= 0.3.20)
   simple_form (~> 3.0.0)

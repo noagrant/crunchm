@@ -28,6 +28,3 @@
 
 
 <%= link_to raw('<span class: "glyphicon glyphicon-trash"></span>'), @product, :confirm => 'Are you sure?', :method => :delete, :remote=>true, :class=>'delete_product glyphicon glyphicon-trash glyph_margin', data: { product_asin: asin } %></p>
-
-  $(this).find('td.($("#glyphicon_call").data("productAsin"))').fadeout();
-  $(this).find('th.($("#glyphicon_call").data("productAsin"))').fadeout();

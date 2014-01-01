@@ -70,11 +70,11 @@
               $(this).find('.glyphicon').fadeOut(100);
             });
 
-            // hide column that was deleted by user using ajax
+            // hide column that was deleted by user using ajax  !!!! note that this ignores confirmation from user !!!!
             $('.glyphicon-trash').on('mousedown', function(){
                 var id = $(this).closest( "th" ).index()+1;
                 var col = $("table tr th:nth-child("+id+"), table tr td:nth-child("+id+")");             
-                col.hide();
+                col.fadeOut(600);
                 // console.log('inside the ajax to hide column');
                 // console.log($(this).closest( "th" ).index()+1);
             });
