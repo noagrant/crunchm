@@ -41,9 +41,6 @@ GEM
     erubis (2.7.0)
     excon (0.29.0)
     execjs (2.0.2)
-    gon (4.1.1)
-      actionpack (>= 2.3.0)
-      json
     hike (1.2.3)
     hirb (0.7.1)
     i18n (0.6.9)
@@ -139,7 +136,6 @@ DEPENDENCIES
   bcrypt-ruby (~> 3.1.2)
   bootstrap-sass (~> 3.0.3.0)
   coffee-rails (~> 4.0.0)
-  gon
   hirb
   jbuilder (~> 1.2)
   jquery-rails
