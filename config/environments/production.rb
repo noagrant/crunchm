@@ -1,6 +1,8 @@
 Crunchm::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-
+  
+  
+  
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -19,8 +21,8 @@ Crunchm::Application.configure do
   # For large-scale production use, consider using a caching reverse proxy like nginx, varnish or squid.
   # config.action_dispatch.rack_cache = true
 
-  # Disable Rails's static asset server (Apache or nginx will already do this).
-  config.serve_static_assets = false
+  # false to disable Rails's static asset server (Apache or nginx will already do this) / true to fix css for heroku
+  config.serve_static_assets = true
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
