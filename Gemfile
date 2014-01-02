@@ -6,8 +6,9 @@ gem 'rails', '4.0.1'
 group :development do
 	gem 'sqlite3'
 	gem 'rails-footnotes'
+	gem 'hirb'
 end
-# gem 'sqlite3'
+
 #group :test do
 # 	gem 'tap'
 # 	postgres gem for Rails to allow db migration to heroku
@@ -15,6 +16,7 @@ end
 #	bundle config build.pg --with-pg-config=/usr/pgsql-9.1/bin/pg_config
 #	gem 'pg'
 #end	
+
 group :production do
   gem 'pg', '0.15.1' #postgresql
   gem 'rails_12factor', '0.0.2'
@@ -51,8 +53,6 @@ gem 'jbuilder', '~> 1.2'
 # Use ActiveModel has_secure_password
 gem 'bcrypt-ruby', '~> 3.1.2'
 
-gem 'hirb'
-
 # for simple form to work with botstrap 2.3 enter in console:
 # rails g simple_form:install --bootstrap
 # see https://github.com/plataformatec/simple_form for documentation
@@ -68,5 +68,4 @@ gem "vacuum", "~> 1.0.0"
 # gem 'pakunok'
 
 # gon allows sending data to js. requires <% include_gon %> in layout head 
-gem 'gon'
-
+#gem 'gon'
