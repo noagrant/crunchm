@@ -65,7 +65,7 @@ Crunchm::Application.configure do
   # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
   # config.assets.precompile += %w( search.js )
   config.assets.precompile += %w(jquery.js jquery_ujs.js PIE.js check_list.js dom-drag.js jquery-1.4.2.min.js jquery-1.7.1.min.js jquery-1.8.3.js jquery-ui.js jquery.accordion.js jquery.corner.js jquery.countdown.js jquery.dimensions.js jquery.masonry.min.js jquery.tinycarousel.min.js jquery.validationEngine-en.js jquery.validationEngine.js questionnaire.js prototype.js users.js)
-  config.assets.precompile += %w(ie7.css ie8.css about_us.css admin_menu.css blog.css default.ultimate.css designer_directory.css designer_directorynew.css drop.css greenstore.css menu.css MenuMatic_dev.css message_view.css product.css setting1.css style1.css styles.css validationEngine.jquery.css)
+  config.assets.precompile += %w(comparisons.css.scss ie7.css ie8.css styles.css validationEngine.jquery.css)
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
