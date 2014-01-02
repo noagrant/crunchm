@@ -1,8 +1,6 @@
 Crunchm::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
   
-  
-  
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -21,11 +19,12 @@ Crunchm::Application.configure do
   # For large-scale production use, consider using a caching reverse proxy like nginx, varnish or squid.
   # config.action_dispatch.rack_cache = true
 
-  # false to disable Rails's static asset server (Apache or nginx will already do this) / true to fix css for heroku
+  # false to disable Rails's static asset server (Apache or nginx will already do this) / true to fix css for heroku (note: didn't fix the css)
   config.serve_static_assets = true
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
+  config.assets.compress = true
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
@@ -35,7 +34,7 @@ Crunchm::Application.configure do
   config.assets.digest = true
 
   # Version of your assets, change this if you want to expire all your assets.
-  config.assets.version = '1.0'
+  #config.assets.version = '1.0'
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
@@ -62,6 +61,8 @@ Crunchm::Application.configure do
   # Precompile additional assets.
   # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
   # config.assets.precompile += %w( search.js )
+  config.assets.precompile += %w(jquery.js jquery_ujs.js PIE.js check_list.js dom-drag.js jquery-1.4.2.min.js jquery-1.7.1.min.js jquery-1.8.3.js jquery-ui.js jquery.accordion.js jquery.corner.js jquery.countdown.js jquery.dimensions.js jquery.masonry.min.js jquery.tinycarousel.min.js jquery.validationEngine-en.js jquery.validationEngine.js questionnaire.js prototype.js users.js)
+  config.assets.precompile += %w(ie7.css ie8.css about_us.css admin_menu.css blog.css default.ultimate.css designer_directory.css designer_directorynew.css drop.css greenstore.css menu.css MenuMatic_dev.css message_view.css product.css setting1.css style1.css styles.css validationEngine.jquery.css)
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
