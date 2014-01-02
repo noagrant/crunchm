@@ -1,6 +1,9 @@
 Crunchm::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
   
+  # Enable the asset pipeline
+  config.assets.enabled = true
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 

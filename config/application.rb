@@ -6,8 +6,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
 
-# Enable the asset pipeline
-config.assets.enabled = true
+
 
 module Crunchm
   class Application < Rails::Application
