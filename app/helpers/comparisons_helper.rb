@@ -391,7 +391,7 @@ module ComparisonsHelper
 
 	def create_table_hash(comparison)
 
-		t = comparison.tributes.group("name").order("placement")
+		t = comparison.tributes.group("name","tributes.id").order("placement")
 		puts ' &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
 
 		tributes_all_hash = Hash.new
