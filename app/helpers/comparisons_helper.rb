@@ -420,7 +420,7 @@ module ComparisonsHelper
 
 
 		end
-		asin_hash = comparison.tributes.group('asin')
+		asin_hash = comparison.tributes.group('asin','tributes.id')
 		products_hash = Hash.new
 		
 		# puts ' &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
