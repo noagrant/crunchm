@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131219080821) do
+ActiveRecord::Schema.define(version: 20140121214139) do
 
   create_table "comparisons", force: true do |t|
     t.string   "name"
@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 20131219080821) do
   add_index "shared_tributes", ["comparison_id"], name: "index_shared_tributes_on_comparison_id"
 
   create_table "tributes", force: true do |t|
-    t.string   "name"
+    t.text     "name" #,          limit: 255
     t.float    "weight"
     t.integer  "product_id"
     t.integer  "comparison_id"
