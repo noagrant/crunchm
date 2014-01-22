@@ -311,13 +311,21 @@ module ComparisonsHelper
 	# end	
 
 	def calculate_crunchm_value
+		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+		
 		# algorithm to calculate ranking:
 		# weight for each attribute has three options: 1, 10 or 100
 		# value goes between 1 and 10 for each attribute-value
 		# for price and amazon rating we calculate product's attribute value by deviding the lowest value by this product's value and timing the quatient by 10
 		# we then add the weighted score
 		comparison = current_comparison
-		
+		# product = current_product
 		# calculate_price_score
 		# calculate_amazon_rating_score
 		
@@ -328,7 +336,12 @@ module ComparisonsHelper
 				product.ranking += ((tribute.score)*(tribute.weight)) if !tribute.score.nil?
 			end
 			product.save
+		puts product.id
+		puts '~~~~~~~~~~~~~~~~~~~~~~~~saved each ranking calc~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+
 		end		
+		puts '~~~~~~~~~~~~~~~~~~~~~~~~finished ranking calc~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+
 	end	
 
 	def calculate_price_score
@@ -359,6 +372,7 @@ module ComparisonsHelper
 	end
 
 	def calculate_amazon_rating_score
+
 		comparison = current_comparison
 		# find the lowest rating
 		ratings = []
@@ -422,16 +436,26 @@ module ComparisonsHelper
 		end
 		asin_hash = comparison.tributes.group('asin','tributes.id')
 		products_hash = Hash.new
-		
-		# puts ' &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+	
 		# puts params[:id]
+
+		
 		asin_hash.each do |t|
+			# products_hash[:rating] = products.where(asin: t.asin).ranking
 			
 			
 			tribute_data = comparison.tributes.where( asin: t.asin )
 			# puts tribute_data
 			# puts '##############'
 			products_hash[t.asin.to_sym] = Hash.new
+
+		 puts ' &&&&&&&&&&&ffff45645645645645645645645646465&&&&&&&&&&&&&'
+			# puts x = comparison.products.where(asin: t.asin)
+			# puts x
+
+		puts ' &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+			# products_hash[t.asin.to_sym][:ranking] = comparison.products.where(asin: t.asin).ranking
+
 			tribute_data.each do |x|
 				
 				products_hash[t.asin.to_sym][x.name] = {

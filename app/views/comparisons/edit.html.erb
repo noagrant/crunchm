@@ -17,8 +17,9 @@
 					<% unless asin == :tributes_all_hash   %> <!-- because we're storing both the attributes table and the products in @crunchm -->
 						<%# gon.product_asin = asin %>
 						<th class='th <%= asin %>'>
+							<%#= @comparison.products.where(asin: asin.to_s)[0][:ranking] %> 
 							<% if asin.to_s == sorted.last.tributes.first.asin %><!-- the highest ranking product -->
-								<p>WINNER</p>
+								<p>BEST MATCH</p>
 							<% end %>						 
 							<img src= <%= values['image'][:value] %>>
 							<%# content_tag 'div', id:  'glyphicon_call', data: { productAsin: asin } do %> <!-- this passes the asin to jquery -->

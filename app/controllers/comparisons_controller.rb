@@ -72,14 +72,14 @@ class ComparisonsController < ApplicationController
 						# so b here is {:url => "google.com"} for instance.
 						# we push because @comparison.products is an array
 						@product = Product.create(url: b[:url])
-						
+						@comparison.products.push(@product)
 						# crunchm!!!!!!!!!
 						crunchm(@comparison, @product, b[:url])
 						# puts "CRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHM"
 						# # puts @crunchm.keys
 						# puts "CRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHM"
 
-						@comparison.products.push(@product)
+						
 						# @comparison.tributes.push()
 						
 						# parseAmazon (b[:url])

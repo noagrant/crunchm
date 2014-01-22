@@ -32,14 +32,14 @@ class ProductsController < ApplicationController
 				puts 'the new url is:::::::::::::::::::::::::::::::::::::::::::::::::'
 				puts url_new
 				@product = Product.create(url: url_new)
+				@comparison.products.push(@product)
 				# @products_hash =  eval(params[:product][:products][:products_hash])
 				# puts "products hash keys are :"
 				# puts @products_hash.keys
 				# @tributes_all_hash = Hash[*@products_hash[:tributes_all_hash].flatten]
 				@crunchm = crunchm(@comparison, @product, url_new)
-				@comparison.products.push(@product)
 				# @comparison.tributes.push()
-			puts "SUCCESSFUL NEW PRODUCT"
+			puts "SUCCESSFUL NEW PRODUCT::"
 		# else
 		# 	puts @comparison.errors.full_messages
 		# end
