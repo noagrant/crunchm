@@ -21,7 +21,7 @@ class ProductsController < ApplicationController
 	def create
 		@comparison = current_comparison
 		@user = current_user
-		# @products_hash = ??? how do we bring this??
+		
         # @tributes_all_hash 
 		# @comparison = Comparison.new(comparison_params)
 		# crunchm(current_comparison, @product, raw_link, products_hash, tributes_all_hash)
@@ -29,17 +29,14 @@ class ProductsController < ApplicationController
 		#!!!!!!!!!!!!!!! note: we need to change this to if parsed, not if saved
 		# if @comparison.update
 				url_new = params[:product][:url]		
-				puts 'the new url is:::::::::::::::::::::::::::::::::::::::::::::::::'
-				puts url_new
+				
 				@product = Product.create(url: url_new)
 				@comparison.products.push(@product)
 				# @products_hash =  eval(params[:product][:products][:products_hash])
-				# puts "products hash keys are :"
-				# puts @products_hash.keys
+				
 				# @tributes_all_hash = Hash[*@products_hash[:tributes_all_hash].flatten]
 				@crunchm = crunchm(@comparison, @product, url_new)
 				# @comparison.tributes.push()
-			puts "SUCCESSFUL NEW PRODUCT::"
 		# else
 		# 	puts @comparison.errors.full_messages
 		# end
@@ -52,10 +49,6 @@ class ProductsController < ApplicationController
 
 	# delete this product from the table
 	def destroy
-		puts "reached the product destroy action<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-		puts "reached the product destroy action<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-		puts "reached the product destroy action<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-		puts "reached the product destroy action<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
 		@product = Product.find(params[:id])
 		@product.destroy
 

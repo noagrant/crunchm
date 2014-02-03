@@ -58,9 +58,7 @@ module ComparisonsHelper
 		parsed = parseAmazon(raw_link)
 		# @tributes_hash = Hash.new
 		nokogiriAmazon(@asin, comp, product, @tech_detail_link)
-		# puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-		# puts products_hash
-		# puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+		
 		vacuumAmazon(@asin, product, comp)
 		calculate_price_score
 		calculate_amazon_rating_score
@@ -80,16 +78,25 @@ module ComparisonsHelper
 		# @parsed = parsed_array[0]
 		# @asin = @parsed.split('/').last
 		@tech_detail_link = @parsed
-		puts "PARSED AMAZON" + @parsed
-		puts "Tech detailed AMAZON" + @tech_detail_link
-		puts "ASIN is ==============================" + @asin
 	end
 	
-	# We're using NOKOGIRI to crowl tech detail page and bring attriutes not on item detail
+	# We're using NOKOGIRI to crawl tech detail page and bring attriutes not on item detail
 	def nokogiriAmazon(asin, comp, product, parsed_url)
 		# uses 'nokogiri' gem and 'open-uri'
 		counter = 50 # we start at 50 to place these at the bottom of the attributes list 
+		puts "2222222222222222222222222222222222222222222222222222222222222222222"
+		puts "2222222222222222222222222222222222222222222222222222222222222222222"
+		puts "2222222222222222222222222222222222222222222222222222222222222222222"
+		puts "2222222222222222222222222222222222222222222222222222222222222222222"
+		puts asin
+		puts comp
+		puts product
+		puts parsed_url
 		technical_detail = Nokogiri::HTML(open(parsed_url))
+		puts "333333333333333333333333333333333333333333333333333333333333333333"
+		puts "333333333333333333333333333333333333333333333333333333333333333333"
+		puts "333333333333333333333333333333333333333333333333333333333333333333"
+		puts "333333333333333333333333333333333333333333333333333333333333333333"
 		
 		# Amazon rating is not included in the item attributes, so we extract it separately
 		customer_rating = retrieveRating(technical_detail)
@@ -110,7 +117,7 @@ module ComparisonsHelper
 		product.tributes.push(tribute)
 		product.update(asin: asin)  
 		comp.tributes.push(tribute)
-		# puts technical_detail.css("#technical-data .bucket .content li")
+		
 		technical_detail.css("#technical-data .bucket .content li").each do |r| 
 		#  r.class # is a Nokogiri::XML::Element
 		#  technical_detail.class  # is a Nokogiri::HTML::Document
@@ -140,8 +147,7 @@ module ComparisonsHelper
 				# 	asin: asin
 				# 	}
 				# tribute = tributes_hash[key.to_sym]
-				puts tribute
-				puts tribute.class
+				
 					
 			# else # 'there is no title for the attribute on Amazon's site
 			#will not display these features as vacuumAmazon will produce same features
@@ -169,19 +175,39 @@ module ComparisonsHelper
 	end	
 
 	def vacuumAmazon(asin, product, comp)
+
+		#encryption http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/Cipher.html
+		key = "\x94\xCD\xE5\xECw\x81]V\xBE`Sl\x95\x11x\xDD" 
+  		iv = "\eGEK~\x90\x80\xA5Y\xD1s\x14\xEC\xB2E\xAE" 
+		encrypted = "uf\x11\x83\xCF\xDB\xE2K,\x84\x86X\xC6\xC0F\xB8Jz-\xE9\xC4\x17\xDE\xE0\xB0I\b\xDC\xCB\x97\xED}uU\xF3Yp\x8A\x93\x90\x95\xEE\bv\xAB\x17\xC2<\x00K?\xD0\xEA]\xE7\xF6\xB41\x04[\x9Fg\xBC\xA7\xCC\xE97\xE4\\\xA1\x92\xFB\xBD\x92\r\n\x15C\xC80"
+		encrypted2 = "uf\u0011\x83\xCF\xDB\xE2K,\x84\x86X\xC6\xC0F\xB8Jz-\xE9\xC4\u0017\xDE\xE0\xB0I\b\xDC˗\xED}uU\xF3Yp\x8A\x93\x90\x95\xEE\bv\xAB\u0017\xC2<\u0000K?\xD0\xEA]\xE7\xF6\xB41\u0004[\x9Fg\xBC\xA7\xCC\xE97\xE4\\\xA1\x92\xFB\xBD\x92\r\n\u0015C\xC80" 
+
+
+
+		decipher = OpenSSL::Cipher::AES.new(128, :CBC)
+		decipher.decrypt
+		decipher.key = key
+		decipher.iv = iv
+
+		amazon_keys = decipher.update(encrypted) + decipher.final
+		amazon_keys = amazon_keys.split(',')
+
+		puts "4444444444443433333#$$$$$$$$$$$$$$$$$$$66666666666666666666666666666666666666666666666"
+		puts amazon_keys
+
+
+
 		request = Vacuum.new
 		request.configure(
-		    aws_access_key_id:     '',
-		    aws_secret_access_key: '',
-		    associate_tag:         'crunchm-20'
+		    aws_access_key_id:     amazon_keys[0],
+		    aws_secret_access_key: amazon_keys[1],
+		    associate_tag:         amazon_keys[2]
 		)
 		params = {
 		  'ItemId' => asin,
 		  'ResponseGroup' => 'ItemAttributes,Images,OfferFull'
 		}
 		results = request.item_lookup(params)
-		puts results.class
-		puts '************************************************************************************'
 		item_attributes = results.to_h
 		tributes_vacuum_hash = item_attributes["ItemLookupResponse"]["Items"]["Item"]["ItemAttributes"]
 		
@@ -198,20 +224,9 @@ module ComparisonsHelper
 				lb = 'N/A'
 				lbs = ''
 			end
-			puts h, lb
-			puts h.class
 
 
 			dimensions = "W: #{w} in x L: #{l} in x H: #{h} in"
-
-			puts dimensions
-			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-			puts 'dimension &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
 			
 			tribute = Tribute.create(name: :Dimensions,
 					value: dimensions,
@@ -236,11 +251,9 @@ module ComparisonsHelper
 		end
 
 # {"Height"=>{"__content__"=>"712", "Units"=>"hundredths-inches"}, "Length"=>{"__content__"=>"1150", "Units"=>"hundredths-inches"}, "Weight"=>{"__content__"=>"800", "Units"=>"hundredths-pounds"}, "Width"=>{"__content__"=>"1350", "Units"=>"hundredths-inches"}}
-		puts "item attributes hash is here &&&&&&&&&&&&&&&&&&&&&&&&&&&&"
-		puts item_attributes
+		
 		# sale price is Amazon discounted price, but it is not always available
 		if item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"] && item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]
-			puts 'does it get here? ******************************'
 			price_hash = {
 				price: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]["FormattedPrice"],
 				# price_data: item_attributes["ItemLookupResponse"]["Items"]["Item"]["Offers"]["Offer"]["OfferListing"]["SalePrice"]["Amount"]
@@ -275,9 +288,6 @@ module ComparisonsHelper
 		
 		tributes_vacuum_hash.each do |key, value| 
 			if TRIBUTES_ALLOWED.has_key?(key.to_sym)
-				# puts "the key is // " + key.to_s + 'and the value is ' + value.to_s
-				# puts value, TRIBUTES_ALLOWED[key.to_sym][0], TRIBUTES_ALLOWED[key.to_sym][1], TRIBUTES_ALLOWED[key.to_sym][2]
-				# puts key.class
 				# tributes_hash[key.to_sym] = {
 				# 		value: value,
 				# 		weight: TRIBUTES_ALLOWED[key.to_sym][0],
@@ -311,14 +321,6 @@ module ComparisonsHelper
 	# end	
 
 	def calculate_crunchm_value
-		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-		puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-		
 		# algorithm to calculate ranking:
 		# weight for each attribute has three options: 1, 10 or 100
 		# value goes between 1 and 10 for each attribute-value
@@ -336,12 +338,8 @@ module ComparisonsHelper
 				product.ranking += ((tribute.score)*(tribute.weight)) if !tribute.score.nil?
 			end
 			product.save
-		puts product.id
-		puts '~~~~~~~~~~~~~~~~~~~~~~~~saved each ranking calc~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-
 		end		
-		puts '~~~~~~~~~~~~~~~~~~~~~~~~finished ranking calc~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-
+		
 	end	
 
 	def calculate_price_score
@@ -356,9 +354,6 @@ module ComparisonsHelper
 
 		# score for price
 		comparison.tributes.where(name: 'price').each do |tribute |
-
-			puts "float should be here ##22222222222222222222222222222222222"
-			puts tribute.value[1..-1].to_f
 
 			if tribute.value[1..-1].to_f === lowest_price
 				tribute.score = 1
@@ -406,7 +401,6 @@ module ComparisonsHelper
 	def create_table_hash(comparison)
 
 		t = comparison.tributes.group("name","tributes.id").order("placement")
-		puts ' &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
 
 		tributes_all_hash = Hash.new
 		t.each do |x|
@@ -425,8 +419,7 @@ module ComparisonsHelper
 			end
 			
 			
-			# puts x.weight
-			# puts x.placement
+	
 		# products = Product.where(comparison_id: params[:id]).order('ranking DESC')
 		# products = current_comparison.products.order('ranking DESC')
 		
@@ -436,24 +429,16 @@ module ComparisonsHelper
 		end
 		asin_hash = comparison.tributes.group('asin','tributes.id')
 		products_hash = Hash.new
-	
-		# puts params[:id]
-
 		
 		asin_hash.each do |t|
 			# products_hash[:rating] = products.where(asin: t.asin).ranking
 			
 			
 			tribute_data = comparison.tributes.where( asin: t.asin )
-			# puts tribute_data
-			# puts '##############'
 			products_hash[t.asin.to_sym] = Hash.new
 
-		 puts ' &&&&&&&&&&&ffff45645645645645645645645646465&&&&&&&&&&&&&'
+		 
 			# puts x = comparison.products.where(asin: t.asin)
-			# puts x
-
-		puts ' &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
 			# products_hash[t.asin.to_sym][:ranking] = comparison.products.where(asin: t.asin).ranking
 
 			tribute_data.each do |x|

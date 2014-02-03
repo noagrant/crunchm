@@ -67,5 +67,6 @@ gem "vacuum", "~> 1.0.0"
 
 # gem 'pakunok'
 
+
 # gon allows sending data to js. requires <% include_gon %> in layout head 
 #gem 'gon'

@@ -57,28 +57,20 @@ class ComparisonsController < ApplicationController
 		@user.comparisons += [@comparison]
 		# @product = Product.create(url: session[0][:url_hash][:url])
 		# @product = Product.create(url: session[1][:url_hash][:url])
-		puts 'showing the count below 888888888888888888888888888888888888888888888888'
-		puts @comparison.products.count
+		
 		unless @comparison.products.count > 1
 			session[:url_hash].each do |a|
 				# because this returns the numerical key as a string instead of a key and "flattens" the hash
 				# we loop to access the actual hash that has the url value.
-				puts 'showing the session a below 888888888888888888888888888888888888888888888888'
-				puts a
+				
 				a.each do |b|
 					if b.is_a? Hash
-						puts 'showing the session b below 888888888888888888888888888888888888888888888888'
-						puts b
 						# so b here is {:url => "google.com"} for instance.
 						# we push because @comparison.products is an array
 						@product = Product.create(url: b[:url])
 						@comparison.products.push(@product)
 						# crunchm!!!!!!!!!
 						crunchm(@comparison, @product, b[:url])
-						# puts "CRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHM"
-						# # puts @crunchm.keys
-						# puts "CRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHMCRUNCHM"
-
 						
 						# @comparison.tributes.push()
 						
@@ -98,12 +90,9 @@ class ComparisonsController < ApplicationController
 			session[:url_hash].each do |a|
 				# because this returns the numerical key as a string instead of a key and "flattens" the hash
 				# we loop to access the actual hash that has the url value.
-				puts 'showing the session a below 888888888888888888888888888888888888888888888888'
-				puts a
+				
 				a.each do |b|
 					if b.is_a? Hash
-						puts 'showing the session b below 888888888888888888888888888888888888888888888888'
-						puts b
 						@product = Product.new(url: b[:url])
 						# so b here is {:url => "google.com"} for instance.
 						# we push because @comparison.products is an array						
@@ -112,9 +101,10 @@ class ComparisonsController < ApplicationController
 			end
 		end	
 		# @product = Product.new(url: 'just a placeholder for now')
-		puts 'looks like it fails right here 888888888888888888888888888'
+
+		#create_table_hash prepares the data from the database to display on view page, this is stored in variable @crunchm 
 		@crunchm = create_table_hash(@comparison)
-		puts 'looks like it fails right here 888888888888888888888888888'
+		
 		@products = current_comparison.products.all		
 	end
 
